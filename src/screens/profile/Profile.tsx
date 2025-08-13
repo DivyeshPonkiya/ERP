@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import ActionBar from '../../components/ActionBar';
-import {BackSvg, DrawerSvg} from '../../assets/Images/svg';
+import {DrawerSvg} from '../../assets/Images/svg';
 import {ms} from '../../theme/spacing';
 import {typography} from '../../theme/typography';
 import {Colors} from '../../theme/variables';
@@ -242,6 +242,45 @@ const HeadsSection = ({formData}: any) => {
   );
 };
 
+const DesignationsSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        const designation = item?.designation;
+        const role = item?.role;
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.designation}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {designation?.title}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.start_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.start_date}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.revoke_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.revoke_date || '-'}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </>
+  );
+};
+
 export default function Profile({route, navigation}: CommonProps) {
   const dispatch = useDispatch();
 
@@ -321,6 +360,17 @@ export default function Profile({route, navigation}: CommonProps) {
         {route?.params?.title == strings.heads ? (
           details?.employee_heads ? (
             <HeadsSection formData={details?.employee_heads} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
+
+        {route?.params?.title == strings.designations ? (
+          details?.employee_designations ? (
+            <DesignationsSection formData={details?.employee_designations} />
           ) : (
             <EmptyState
               title={strings.noDataFound}

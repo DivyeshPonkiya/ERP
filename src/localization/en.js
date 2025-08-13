@@ -241,4 +241,6 @@ export const en = {
   designation: 'Designation',
   total_working_time_in_month: 'Total working months',
   role: 'Role',
+  start_date: 'Start date',
+  revoke_date: 'Revoke date',
 };
