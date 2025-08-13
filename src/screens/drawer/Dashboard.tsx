@@ -7,13 +7,17 @@ import SafeAreaWrapper from '../../components/SafeAreaWrapper';
 import {DrawerSvg} from '../../assets/Images/svg';
 import {CommonProps} from '../types';
 import ActionBar from '../../components/ActionBar';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '../../store/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../store/store';
 import {fetchProfile} from '../../createAsyncThunk/authAsyncThunk';
 import {urlEndPoint} from '../../constants/urlEndPoint';
 
 const Dashboard = ({navigation}: CommonProps) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [profileLoading] = useSelector((state: RootState) => [
+    state.authSlice.profileLoading,
+  ]);
+
   useEffect(() => {
     dispatch(fetchProfile({endPoint: urlEndPoint.profile}));
   }, []);
@@ -37,7 +41,7 @@ const Dashboard = ({navigation}: CommonProps) => {
         refreshControl={
           <RefreshControl
             enabled={true}
-            refreshing={false}
+            refreshing={profileLoading}
             onRefresh={onRefresh}
             colors={[Colors.primary]}
             tintColor={Colors.primary}

@@ -1,6 +1,6 @@
 // Profile.tsx
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, RefreshControl} from 'react-native';
 import ActionBar from '../../components/ActionBar';
 import {DrawerSvg} from '../../assets/Images/svg';
 import {ms} from '../../theme/spacing';
@@ -9,12 +9,13 @@ import {Colors} from '../../theme/variables';
 import InputField from '../../components/InputField';
 import {strings} from '../../localization';
 import {FirstLatter, isNull} from '../../constants/constants';
-import {goBack} from '../../navigators/RootNavigation';
 import SafeAreaWrapper from '../../components/SafeAreaWrapper';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
+import {AppDispatch, RootState} from '../../store/store';
 import {CommonProps} from '../types';
 import EmptyState from '../../components/EmptyState';
+import {fetchProfile} from '../../createAsyncThunk/authAsyncThunk';
+import {urlEndPoint} from '../../constants/urlEndPoint';
 
 const ProfileSection = ({formData}: any) => {
   return (
@@ -124,25 +125,16 @@ const EducationSection = ({formData}: any) => {
                 {item?.start_year}
               </Text>
             </View>
-            {!item?.pursuing ? (
+            {item?.pursuing !== undefined ? (
               <View style={styles.titleSubTitleRaw}>
                 <Text style={[styles.titleText, styles.width38]}>
-                  {strings.end_year}:
+                  {item?.pursuing ? strings.pursuing : strings.end_year}:
                 </Text>
                 <Text style={[styles.subTitleText, styles.width63]}>
-                  {item?.end_year}
+                  {item?.pursuing ? strings.yes : item?.end_year}
                 </Text>
               </View>
-            ) : (
-              <View style={styles.titleSubTitleRaw}>
-                <Text style={[styles.titleText, styles.width38]}>
-                  {strings.pursuing}:
-                </Text>
-                <Text style={[styles.subTitleText, styles.width63]}>
-                  {item?.pursuing ? strings.yes : strings.no}
-                </Text>
-              </View>
-            )}
+            ) : null}
           </View>
         );
       })}
@@ -247,7 +239,6 @@ const DesignationsSection = ({formData}: any) => {
     <>
       {formData?.map((item: any, index: any) => {
         const designation = item?.designation;
-        const role = item?.role;
         return (
           <View style={styles.boxView}>
             <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
@@ -281,8 +272,46 @@ const DesignationsSection = ({formData}: any) => {
   );
 };
 
+const DepartmentSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        const department = item?.department;
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.department}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {department?.title}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.start_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.start_date}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.revoke_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.revoke_date || '-'}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </>
+  );
+};
+
 export default function Profile({route, navigation}: CommonProps) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [profileData, profileLoading] = useSelector((state: RootState) => [
     state.authSlice.profileData,
@@ -320,17 +349,29 @@ export default function Profile({route, navigation}: CommonProps) {
     }
   }, [profileData]);
 
+  const onRefresh = () => {
+    dispatch(fetchProfile({endPoint: urlEndPoint.profile}));
+  };
+
   return (
     <SafeAreaWrapper statusBg={Colors.primary} barStyle="light-content">
       <ActionBar
-        title={route?.params?.title || 'Profile'}
-        // LeftIcon={<BackSvg width={28} height={28} color={Colors.white} />}
-        // onLeftPress={() => goBack()}
+        title={route?.params?.title || strings.profile}
         LeftIcon={<DrawerSvg height={28} width={28} color={Colors.white} />}
         onLeftPress={() => navigation?.openDrawer()}
       />
 
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={
+          <RefreshControl
+            enabled={true}
+            refreshing={profileLoading}
+            onRefresh={onRefresh}
+            colors={[Colors.primary]}
+            tintColor={Colors.primary}
+          />
+        }>
         {route?.params?.title == strings.profile ? (
           <ProfileSection formData={formData} />
         ) : null}
@@ -371,6 +412,17 @@ export default function Profile({route, navigation}: CommonProps) {
         {route?.params?.title == strings.designations ? (
           details?.employee_designations ? (
             <DesignationsSection formData={details?.employee_designations} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
+
+        {route?.params?.title == strings.departments ? (
+          details?.employee_departments ? (
+            <DepartmentSection formData={details?.employee_departments} />
           ) : (
             <EmptyState
               title={strings.noDataFound}

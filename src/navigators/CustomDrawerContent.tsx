@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Pressable,
   Alert,
 } from 'react-native';
 import {typography} from '../theme/typography';
@@ -165,13 +164,14 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
     const items: menuProps[] = [
       {label: strings.profile, redirect: NAVIGATION.Profile},
       {label: strings.educations, redirect: NAVIGATION.Profile},
-      // {label: strings.families, redirect: NAVIGATION.Profile},
-      {label: strings.heads, redirect: NAVIGATION.Profile},
-      {label: strings.branch, redirect: NAVIGATION.Profile},
-      {label: strings.departments, redirect: NAVIGATION.Profile},
-      {label: strings.designations, redirect: NAVIGATION.Profile},
       {label: strings.experiences, redirect: NAVIGATION.Profile},
+      {label: strings.heads, redirect: NAVIGATION.Profile},
+      {label: strings.designations, redirect: NAVIGATION.Profile},
+      {label: strings.departments, redirect: NAVIGATION.Profile},
       {label: strings.logout, redirect: 'power'},
+
+      // {label: strings.families, redirect: NAVIGATION.Profile},
+      // {label: strings.branch, redirect: NAVIGATION.Profile},
     ];
 
     // if (profileDetail.employee_educations?.length) {
@@ -199,11 +199,29 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
     return items;
   }, [profileDetail]);
 
+  const menuFarmerItem = useMemo<menuProps[]>(() => {
+    const items: menuProps[] = [
+      {label: strings.profile, redirect: NAVIGATION.Profile},
+    ];
+    return items;
+  }, []);
+
   const [menuItems, setMenuItems] = useState<menuProps[]>(menuEmployeeItem);
 
   useEffect(() => {
     if (selectModule) {
-      setMenuItems(selectModule.id == 'employee' ? menuEmployeeItem : []);
+      setMenuItems(
+        selectModule.id == 'employee'
+          ? menuEmployeeItem
+          : selectModule.id == 'farmer'
+          ? menuFarmerItem
+          : [],
+      );
+      if (selectModule.id == 'employee') {
+        // navigate(NAVIGATION.Dashboard);
+      } else if (selectModule.id == 'farmer') {
+        // navigate(NAVIGATION.Profile, {title: strings.designation});
+      }
     }
   }, [selectModule]);
 
@@ -253,7 +271,7 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
         }}
         selectedRowTextStyle={{
           color: Colors.textCl,
-          ...typography._14SofticesSemibold,
+          ...typography._18SofticesRegular,
         }}
         rowTextStyle={{
           color: Colors.textCl,
@@ -267,7 +285,14 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
           return (
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               {item?.icon}
-              <Text style={{marginLeft: ms(10)}}>{CFL(item?.name)}</Text>
+              <Text
+                style={{
+                  marginLeft: ms(10),
+                  color: Colors.textCl,
+                  ...typography._18SofticesRegular,
+                }}>
+                {CFL(item?.name)}
+              </Text>
             </View>
           );
         }}
@@ -275,11 +300,14 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
           return (
             <InputField
               value={selectModule.name}
-              onChangeText={() => setSelectModule({name: '', id: '', icon: ''})}
+              onChangeText={() =>
+                setSelectModule({name: '', id: '', icon: <></>})
+              }
               labelTxt={strings.modules}
               placeholder={strings.productionPlaceholder}
               editable={false}
               leftIcon={selectModule.icon}
+              inputStyle={{...typography._18SofticesRegular}}
               rightIcon={
                 <View style={{marginRight: ms(14)}}>
                   <DropDownSvg

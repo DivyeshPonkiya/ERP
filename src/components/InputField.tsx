@@ -6,6 +6,7 @@ import {
   Text,
   TextInputProps,
   ViewStyle,
+  TextStyle,
 } from 'react-native';
 import {Colors} from '../theme/variables';
 import {typography} from '../theme/typography';
@@ -39,6 +40,7 @@ interface Props extends TextInputProps {
   textAlignVertical?: 'top' | 'center' | 'bottom';
   editable?: boolean;
   style?: ViewStyle;
+  inputStyle?: TextStyle;
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
   secureTextEntry?: boolean;
@@ -67,6 +69,7 @@ const InputField = forwardRef<InputFieldRef, Props>(
       textAlignVertical = 'center',
       editable = true,
       style,
+      inputStyle,
       rightIcon,
       leftIcon,
       requiredField = false,
@@ -130,7 +133,9 @@ const InputField = forwardRef<InputFieldRef, Props>(
                 marginHorizontal: leftIcon ? ms(10) : 0,
                 minHeight: multiline ? ms(100) : undefined,
                 pointerEvents: !editable ? 'none' : 'auto',
+                color: Colors.textCl,
               },
+              inputStyle,
             ]}
             maxLength={maxLength}
             onChangeText={onChangeText}
