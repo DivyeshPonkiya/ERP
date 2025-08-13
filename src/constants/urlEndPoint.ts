@@ -1,13 +1,14 @@
 export const urlEndPoint = {
   login: 'employees/oauth/authorize',
   token: 'employees/oauth/token',
+  profile: 'employees/me',
+  revoke: 'employees/oauth/revoke',
 
   sign_up: 'authorizations/sign_up',
   forget_password: 'forget-password',
   reset_password: 'reset-password',
-  revoke: 'oauth/revoke',
 
-  profile: 'profile',
+  // profile: 'profile',
   update_password: 'profile/update_password',
   products: 'products',
   autocompleteProducts: 'autocomplete/products',

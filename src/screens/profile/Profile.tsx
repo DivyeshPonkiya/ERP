@@ -1,27 +1,18 @@
 // Profile.tsx
-import React, {useEffect, useMemo, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import ActionBar from '../../components/ActionBar';
-import {BackSvg, DeleteSvg, PencilSvg} from '../../assets/Images/svg';
+import {BackSvg} from '../../assets/Images/svg';
 import {ms} from '../../theme/spacing';
 import {typography} from '../../theme/typography';
 import {Colors} from '../../theme/variables';
 import InputField from '../../components/InputField';
 import {strings} from '../../localization';
-import {ACTIVE_OPACITY, hexToRGBA, isNull} from '../../constants/constants';
-import {goBack, navigate} from '../../navigators/RootNavigation';
-import {NAVIGATION} from '../../constants/navigation';
+import {FirstLatter, isNull} from '../../constants/constants';
+import {goBack} from '../../navigators/RootNavigation';
 import SafeAreaWrapper from '../../components/SafeAreaWrapper';
-import ReusableModal from '../../components/ReusableModal';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
-import FastImageView from '../../components/FastImageView';
 
 export default function Profile({navigation}: any) {
   const dispatch = useDispatch();
@@ -32,39 +23,32 @@ export default function Profile({navigation}: any) {
   ]);
 
   const [formData, setFormData] = useState({
-    photo: '',
     name: '',
-    email: '',
+    companyEmail: '',
+    gender: '',
+    joiningDate: '',
+    onboardingDate: '',
+    nationality: '',
   });
 
-  const [password, setPassword] = useState('');
-  const [deleteModal, setDeleteModal] = useState(false);
+  const data = profileData?.employee;
 
   useEffect(() => {
     if (!isNull(profileData)) {
-      const data = profileData?.user;
+      const data = profileData?.employee;
+
       setFormData({
         ...formData,
-        photo: data?.photo_url,
-        name: data?.name,
-        email: data?.email,
+        name:
+          data?.first_name + ' ' + data?.middle_name + ' ' + data?.last_name,
+        companyEmail: data?.email,
+        gender: data?.gender,
+        joiningDate: data?.joining_date,
+        onboardingDate: data?.onboarding_date,
+        nationality: data?.nationality,
       });
     }
   }, [profileData]);
-
-  const modalContent = useMemo(
-    () => (
-      <View>
-        <InputField
-          value={password}
-          onChangeText={setPassword}
-          labelTxt={strings.password}
-          placeholder={strings.enterPasswordAddress}
-        />
-      </View>
-    ),
-    [],
-  ); // Add dependencies if needed
 
   return (
     <SafeAreaWrapper statusBg={Colors.primary} barStyle="light-content">
@@ -75,66 +59,69 @@ export default function Profile({navigation}: any) {
       />
 
       <ScrollView contentContainerStyle={styles.container}>
-        <FastImageView
-          source={formData.photo}
-          resizeMode="contain"
-          style={styles.profileImage}
-        />
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>
+            {FirstLatter(data?.first_name) + FirstLatter(data?.middle_name)}
+          </Text>
+        </View>
 
-        <TouchableOpacity
-          activeOpacity={ACTIVE_OPACITY}
-          style={styles.editProfileBtn}
-          onPress={() => navigate(NAVIGATION.EditProfile)}>
-          <PencilSvg width={20} height={20} color={Colors.primary} />
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.editProfileText}>Edit Profile</Text>
-            <View
-              style={{
-                height: ms(1),
-                backgroundColor: Colors.primary,
-                marginTop: ms(2),
-                width: '100%',
-              }}
-            />
-          </View>
-        </TouchableOpacity>
-
-        <InputField
-          value={formData.name}
-          onChangeText={val => setFormData({...formData, name: val})}
-          labelTxt={strings.name}
-          placeholder={'Enter ' + strings.name}
-          editable={false}
-        />
-        <InputField
-          value={formData.email}
-          onChangeText={val => setFormData({...formData, email: val})}
-          labelTxt={strings.email}
-          placeholder={'Enter ' + strings.enterEmailAddress}
-          editable={false}
-        />
+        {formData.name ? (
+          <InputField
+            value={formData.name}
+            onChangeText={val => setFormData({...formData, name: val})}
+            labelTxt={strings.name}
+            placeholder={strings.name}
+            editable={false}
+          />
+        ) : null}
+        {formData.companyEmail ? (
+          <InputField
+            value={formData.companyEmail}
+            onChangeText={val => setFormData({...formData, companyEmail: val})}
+            labelTxt={strings.companyEmail}
+            placeholder={strings.companyEmail}
+            editable={false}
+          />
+        ) : null}
+        {formData.gender ? (
+          <InputField
+            value={formData.gender}
+            onChangeText={val => setFormData({...formData, gender: val})}
+            labelTxt={strings.gender}
+            placeholder={strings.gender}
+            editable={false}
+          />
+        ) : null}
+        {formData.joiningDate ? (
+          <InputField
+            value={formData.joiningDate}
+            onChangeText={val => setFormData({...formData, joiningDate: val})}
+            labelTxt={strings.joiningDate}
+            placeholder={strings.joiningDate}
+            editable={false}
+          />
+        ) : null}
+        {formData.onboardingDate ? (
+          <InputField
+            value={formData.onboardingDate}
+            onChangeText={val =>
+              setFormData({...formData, onboardingDate: val})
+            }
+            labelTxt={strings.onboardingDate}
+            placeholder={strings.enterEmailAddress}
+            editable={false}
+          />
+        ) : null}
+        {formData.nationality ? (
+          <InputField
+            value={formData.nationality}
+            onChangeText={val => setFormData({...formData, nationality: val})}
+            labelTxt={strings.nationality}
+            placeholder={strings.nationality}
+            editable={false}
+          />
+        ) : null}
       </ScrollView>
-      <ReusableModal
-        visible={deleteModal}
-        cancelLabel={'Cancel'}
-        submitLabel={'Delete Account'}
-        submitBgColor={Colors.colorRedD4}
-        title={'Delete Account'}
-        description={
-          'Are you sure you want to delete your account? This action is permanent and cannot be undone.'
-        }
-        onClose={() => setDeleteModal(false)}
-        onSubmit={() => setDeleteModal(false)}>
-        {modalContent}
-      </ReusableModal>
-
-      <TouchableOpacity
-        activeOpacity={ACTIVE_OPACITY}
-        style={styles.deleteButton}
-        onPress={() => setDeleteModal(true)}>
-        <DeleteSvg width={20} height={20} color={Colors.colorRedD4} />
-        <Text style={styles.deleteText}> Delete Account</Text>
-      </TouchableOpacity>
     </SafeAreaWrapper>
   );
 }
@@ -145,22 +132,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: ms(50),
   },
-  profileImage: {
+  avatar: {
     width: ms(140),
     height: ms(140),
     borderRadius: ms(140),
     marginVertical: ms(20),
     backgroundColor: Colors.borderCl,
-  },
-  editProfileBtn: {
-    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: ms(20),
+    justifyContent: 'center',
   },
-  editProfileText: {
+  avatarText: {
+    ...typography._26SofticesExtraBold,
     color: Colors.primary,
-    ...typography._16SofticesSemibold,
   },
+
   inputContainer: {
     alignSelf: 'stretch',
     marginBottom: 16,
@@ -182,18 +167,5 @@ const styles = StyleSheet.create({
   passwordRow: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  deleteButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: hexToRGBA(Colors.colorRedD4, 0.1),
-    justifyContent: 'center',
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-  },
-  deleteText: {
-    color: Colors.colorRedD4,
-    ...typography._16SofticesRegular,
   },
 });

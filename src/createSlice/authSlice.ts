@@ -21,6 +21,12 @@ interface AppState {
   tokenData: any;
   tokenLoading: boolean;
 
+  revokeData: any;
+  revokeLoading: boolean;
+
+  profileData: any;
+  profileLoading: boolean;
+
   registerData: any;
   registerLoading: boolean;
 
@@ -29,12 +35,6 @@ interface AppState {
 
   resetPasswordData: any;
   resetPasswordLoading: boolean;
-
-  revokeData: any;
-  revokeLoading: boolean;
-
-  profileData: any;
-  profileLoading: boolean;
 
   profileUpdateData: any;
   profileUpdateLoading: boolean;
@@ -56,6 +56,12 @@ const initialState: AppState = {
   tokenData: null,
   tokenLoading: false,
 
+  revokeData: null,
+  revokeLoading: false,
+
+  profileData: null,
+  profileLoading: false,
+
   registerData: null,
   registerLoading: false,
 
@@ -64,12 +70,6 @@ const initialState: AppState = {
 
   resetPasswordData: null,
   resetPasswordLoading: false,
-
-  revokeData: null,
-  revokeLoading: false,
-
-  profileData: null,
-  profileLoading: false,
 
   profileUpdateData: null,
   profileUpdateLoading: false,
@@ -113,6 +113,13 @@ const authSlice = createSlice({
     setTokenData(state, action: PayloadAction<any>) {
       state.tokenData = action.payload;
     },
+    setRevokeData(state, action: PayloadAction<any>) {
+      state.revokeData = action.payload;
+    },
+    setProfileData(state, action: PayloadAction<any>) {
+      state.profileData = action.payload;
+    },
+
     setRegisterData(state, action: PayloadAction<any>) {
       state.registerData = action.payload;
     },
@@ -121,12 +128,6 @@ const authSlice = createSlice({
     },
     setResetPasswordData(state, action: PayloadAction<any>) {
       state.resetPasswordData = action.payload;
-    },
-    setRevokeData(state, action: PayloadAction<any>) {
-      state.revokeData = action.payload;
-    },
-    setProfileData(state, action: PayloadAction<any>) {
-      state.profileData = action.payload;
     },
     setProfileUpdateData(state, action: PayloadAction<any>) {
       state.profileUpdateData = action.payload;
@@ -141,11 +142,12 @@ const authSlice = createSlice({
       state.error = null;
       state.loginLoading = false;
       state.tokenLoading = false;
+      state.revokeLoading = false;
+      state.profileLoading = false;
+
       state.registerLoading = false;
       state.forgetPassLoading = false;
       state.resetPasswordLoading = false;
-      state.revokeLoading = false;
-      state.profileLoading = false;
       state.profileUpdateLoading = false;
       state.updatePasswordLoading = false;
       state.dashboardLoading = false;
@@ -169,6 +171,24 @@ const authSlice = createSlice({
         handleFulfilled('tokenData', 'tokenLoading'),
       )
       .addCase(fetchToken.rejected, handleRejected('tokenLoading'));
+
+    // Using helper functions for fetchRevoke
+    builder
+      .addCase(fetchRevoke.pending, handlePending('revokeLoading'))
+      .addCase(
+        fetchRevoke.fulfilled,
+        handleFulfilled('revokeData', 'revokeLoading'),
+      )
+      .addCase(fetchRevoke.rejected, handleRejected('revokeLoading'));
+
+    //  Using helper functions for fetchProfile
+    builder
+      .addCase(fetchProfile.pending, handlePending('profileLoading'))
+      .addCase(
+        fetchProfile.fulfilled,
+        handleFulfilled('profileData', 'profileLoading'),
+      )
+      .addCase(fetchProfile.rejected, handleRejected('profileLoading'));
 
     //Using helper functions for fetchRegister
     builder
@@ -205,24 +225,6 @@ const authSlice = createSlice({
         fetchResetPassword.rejected,
         handleRejected('resetPasswordLoading'),
       );
-
-    // Using helper functions for fetchRevoke
-    builder
-      .addCase(fetchRevoke.pending, handlePending('revokeLoading'))
-      .addCase(
-        fetchRevoke.fulfilled,
-        handleFulfilled('revokeData', 'revokeLoading'),
-      )
-      .addCase(fetchRevoke.rejected, handleRejected('revokeLoading'));
-
-    //  Using helper functions for fetchProfile
-    builder
-      .addCase(fetchProfile.pending, handlePending('profileLoading'))
-      .addCase(
-        fetchProfile.fulfilled,
-        handleFulfilled('profileData', 'profileLoading'),
-      )
-      .addCase(fetchProfile.rejected, handleRejected('profileLoading'));
 
     //  Using helper functions for fetchProfileUpdate
     builder
@@ -268,11 +270,12 @@ const authSlice = createSlice({
 export const {
   setLoginData,
   setTokenData,
+  setRevokeData,
+  setProfileData,
+
   setRegisterData,
   setForgetPassData,
   setResetPasswordData,
-  setRevokeData,
-  setProfileData,
   setProfileUpdateData,
   setUpdatePasswordData,
   setDashboardData,

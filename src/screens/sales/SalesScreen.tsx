@@ -69,7 +69,7 @@ const SalesScreen = ({navigation}: CommonProps) => {
     state.salesSlice.salesDeleteLoading,
     state.productsSlice.productSearchData,
     state.customersSlice.customerSearchData,
-    state.customersSlice.error,
+    state.salesSlice.error,
   ]);
 
   const [salesLists, setSalesLists] = useState<any>(null);

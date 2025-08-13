@@ -80,7 +80,7 @@ const ProductionScreen = ({navigation}: CommonProps) => {
     state.productionsSlice.productionDeleteLoading,
     state.worksSlice.WorkSearchData,
     state.productsSlice.productSearchData,
-    state.customersSlice.error,
+    state.productionsSlice.error,
   ]);
 
   const [productionLists, setProductionLists] = useState<any>(null);

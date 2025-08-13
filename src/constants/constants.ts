@@ -35,10 +35,8 @@ export const LOGIN_DATA = 'LOGIN_DATA';
 export const Response_Type = 'code';
 export const Redirect_Uri = 'urn:ietf:wg:oauth:2.0:oob';
 export const Scope = 'read write';
-export const Code_Challenge = 'wyztbFv3UoWXrFiVGEQ9-LaIXl0G0CnVFBJTD7_4sEU';
 export const Code_challenge_method = 'S256';
 export const Grant_type = 'authorization_code';
-export const Code_verifier = 'STptQucO7cBNFSNLm5Hqk7aZ289zy53XkLza9HWQxjm';
 
 export function errorMessageHandler(response: any) {
   var err = response;
@@ -197,6 +195,10 @@ export function keyValueEmptyFilter(url?: any) {
     return acc;
   }, {} as Record<string, any>);
   return data;
+}
+
+export function FirstLatter(string: String) {
+  return !isNull(string) ? string?.slice(0, 1)?.toUpperCase() : '-';
 }
 
 export const ACTIVE_OPACITY = 0.7;

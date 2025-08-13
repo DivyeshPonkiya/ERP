@@ -28,16 +28,15 @@ import {
 } from '../assets/Images/svg';
 import {DropDownSvg} from '../assets/Images/svg/DropDownSvg';
 import {
-  Access_Token,
   ACTIVE_OPACITY,
   asyncKeys,
   Client_Id,
   Client_Secret,
+  FirstLatter,
   toastConst,
 } from '../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../store/store';
-import FastImageView from '../components/FastImageView';
 import {setProfileData, setRevokeData} from '../createSlice/authSlice';
 import {strings} from '../localization';
 import {setEndUrl} from '../createSlice/reportSlice';
@@ -139,7 +138,7 @@ const CustomDrawer = ({navigation}: CommonProps) => {
       state.authSlice.revokeLoading,
     ],
   );
-  const profileDetail = profileData?.user;
+  const profileDetail = profileData?.employee;
 
   useEffect(() => {
     if (revokeData) {
@@ -159,12 +158,20 @@ const CustomDrawer = ({navigation}: CommonProps) => {
         <Pressable
           style={styles.profileRow}
           onPress={() => navigate(NAVIGATION.Profile)}>
-          <FastImageView
-            source={profileDetail?.photo_url}
-            resizeMode="contain"
-            style={styles.avatar}
-          />
-          <Text style={styles.name}>{profileDetail?.name ?? 'User'}</Text>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>
+              {FirstLatter(profileDetail?.first_name) +
+                FirstLatter(profileDetail?.middle_name)}
+            </Text>
+          </View>
+
+          <Text style={styles.name}>
+            {profileDetail?.first_name +
+              ' ' +
+              profileDetail?.middle_name +
+              ' ' +
+              profileDetail?.last_name}
+          </Text>
         </Pressable>
       </View>
       <ScrollView>
@@ -275,6 +282,12 @@ const styles = StyleSheet.create({
     height: ms(80),
     borderRadius: ms(40),
     backgroundColor: Colors.borderCl,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarText: {
+    ...typography._24SofticesBold,
+    color: Colors.primary,
   },
   name: {
     marginLeft: ms(18),

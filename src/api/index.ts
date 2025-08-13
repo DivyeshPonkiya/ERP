@@ -28,20 +28,13 @@ export default class Index {
   }
 
   // Common headers with token
-  private async getHeaders(
-    contentType = 'application/json',
-    access_token = false,
-  ) {
+  private async getHeaders(contentType = 'application/json') {
     const token = await storage.getString(asyncKeys.accessToken);
 
     return {
       Accept: 'application/json',
       'Content-Type': contentType,
-      Authorization: access_token
-        ? `Bearer ${Access_Token}`
-        : token
-        ? `Bearer ${token}`
-        : `Bearer ${Access_Token}`,
+      Authorization: token ? `Bearer ${token}` : `Bearer ${Access_Token}`,
     };
   }
 
@@ -84,18 +77,15 @@ export default class Index {
     const url = await this.buildUrl(params);
     const headers: any = await this.getHeaders();
     const response = await fetch(url, {method: 'GET', headers});
-    return this.handleResponse(response).catch(() => {
-      throw `501`;
+    return this.handleResponse(response).catch(e => {
+      throw e ? `${e}` : `501`;
     });
   }
 
-  async post(params?: any, outerFormData?: any, access_token?: boolean) {
+  async post(params?: any, outerFormData?: any) {
     const url = await this.buildUrl();
 
-    const headers: any = await this.getHeaders(
-      'multipart/form-data',
-      access_token,
-    );
+    const headers: any = await this.getHeaders('multipart/form-data');
 
     const formData = new FormData();
     if (!isNull(params)) {
@@ -116,8 +106,8 @@ export default class Index {
         : null,
     });
 
-    return this.handleResponse(response).catch(() => {
-      throw `501`;
+    return this.handleResponse(response).catch(e => {
+      throw e ? `${e}` : `501`;
     });
   }
 

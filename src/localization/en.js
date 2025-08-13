@@ -3,6 +3,12 @@ export const en = {
 
   wellCome: 'Welcome back!',
   happyToSeeYouAgain: 'Happy to see you again!',
+  companyEmail: 'Company Email',
+  gender: 'Gender',
+  joiningDate: 'Joining Date',
+  onboardingDate: 'Onboarding Date',
+  nationality: 'Nationality',
+
   email: 'Email',
   password: 'Password',
   enterEmailAddress: 'Email address',
