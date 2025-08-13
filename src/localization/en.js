@@ -214,4 +214,19 @@ export const en = {
   rsSign: '₹',
   units: 'units',
   items: 'items',
+
+  employee: 'Employee',
+  procurement: 'Procurement',
+  sale: 'Sale',
+  farmer: 'Farmer',
+  modules: 'Modules',
+
+  profile: 'Profile',
+  educations: 'Educations',
+  families: 'Families',
+  heads: 'Heads',
+  branch: 'Branch',
+  departments: 'Departments',
+  designations: 'Designations',
+  experiences: 'Experiences',
 };

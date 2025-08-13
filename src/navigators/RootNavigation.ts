@@ -5,9 +5,20 @@ import {
 
 export const navigationRef: any = createNavigationContainerRef();
 
-export function navigate(name: string | any, params?: object | any) {
+export function navigate(
+  name: string | any,
+  params?: object | any,
+  reset?: boolean,
+) {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name, params);
+    if (reset) {
+      navigationRef.reset({
+        index: 0,
+        routes: [{name: name, params: params}],
+      });
+    } else {
+      navigationRef.navigate(name, params);
+    }
   }
 }
 

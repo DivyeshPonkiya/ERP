@@ -154,7 +154,7 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
-        drawerStyle: {width: '65%'},
+        drawerStyle: {width: '80%'},
       }}
       initialRouteName={NAVIGATION.Dashboard}
       drawerContent={(props: any) => <CustomDrawerContent {...props} />}>

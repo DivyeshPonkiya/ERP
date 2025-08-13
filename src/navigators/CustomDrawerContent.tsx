@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -30,9 +30,11 @@ import {DropDownSvg} from '../assets/Images/svg/DropDownSvg';
 import {
   ACTIVE_OPACITY,
   asyncKeys,
+  CFL,
   Client_Id,
   Client_Secret,
   FirstLatter,
+  isNull,
   toastConst,
 } from '../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
@@ -46,6 +48,43 @@ import {resetState} from '../createAsyncThunk/resetStateAsyncThunk';
 import storage from '../storage';
 import ToastMessage from '../components/ToastMessage';
 import {CommonProps} from '../screens/types';
+import SelectDropdown from '../components/SelectDropdown/SelectDropdown';
+import InputField from '../components/InputField';
+
+interface MenuSubItem {
+  id: string;
+  label: string;
+}
+
+interface menuProps {
+  label: string;
+  redirect: string;
+  isExpandable?: boolean;
+  subItems?: MenuSubItem[];
+}
+
+const modulesList = [
+  {
+    name: strings.employee,
+    id: 'employee',
+    icon: <HomeSvg height={22} width={22} color={Colors.textLight} />,
+  },
+  {
+    name: strings.procurement,
+    id: 'procurement',
+    icon: <HomeSvg height={22} width={22} color={Colors.textLight} />,
+  },
+  {
+    name: strings.sale,
+    id: 'sale',
+    icon: <SalesSvg height={22} width={22} color={Colors.textLight} />,
+  },
+  {
+    name: strings.farmer,
+    id: 'farmer',
+    icon: <HomeSvg height={22} width={22} color={Colors.textLight} />,
+  },
+];
 
 const svgLoad = (key: any, color1: any, styles?: any) => {
   switch (key) {
@@ -93,43 +132,12 @@ const svgLoad = (key: any, color1: any, styles?: any) => {
         <LogoutSvg height={24} width={24} color={color1} styles={styles} />
       );
     default:
-      return null;
+      return <HomeSvg height={24} width={24} color={color1} styles={styles} />;
   }
 };
 
-const CustomDrawer = ({navigation}: CommonProps) => {
+const CustomDrawer = ({route, navigation}: CommonProps) => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const [expandedMenus, setExpandedMenus] = useState<{[key: string]: boolean}>(
-    {},
-  );
-
-  const toggleExpand = (label: string) => {
-    setExpandedMenus(prev => ({...prev, [label]: !prev[label]}));
-  };
-
-  const menuItems = [
-    {label: strings.dashboard, redirect: NAVIGATION.Dashboard},
-    {label: strings.sales, redirect: NAVIGATION.SalesScreen},
-    {label: strings.stocks, redirect: NAVIGATION.StockScreen},
-    {label: strings.productions, redirect: NAVIGATION.ProductionScreen},
-    {label: strings.customers, redirect: NAVIGATION.CustomersScreen},
-    {label: strings.products, redirect: NAVIGATION.ProductsScreen},
-    {label: strings.works, redirect: NAVIGATION.WorksScreen},
-    {
-      label: strings.reports,
-      redirect: NAVIGATION.ReportScreen,
-      isExpandable: true,
-      subItems: [
-        {id: 'production', label: strings.productions},
-        {id: 'stock', label: strings.stocks},
-        {id: 'sales', label: strings.sales},
-      ],
-    },
-    {label: strings.termUse, redirect: NAVIGATION.TermsOfUse},
-    {label: strings.privacyPolicy, redirect: NAVIGATION.PrivacyPolicy},
-    {label: strings.logout, redirect: 'power'},
-  ];
 
   const [profileData, revokeData, revokeLoading] = useSelector(
     (state: RootState) => [
@@ -139,6 +147,64 @@ const CustomDrawer = ({navigation}: CommonProps) => {
     ],
   );
   const profileDetail = profileData?.employee;
+
+  const [expandedMenus, setExpandedMenus] = useState<{[key: string]: boolean}>(
+    {},
+  );
+  const [selectModule, setSelectModule] = useState({
+    name: strings.employee,
+    id: 'employee',
+    icon: <HomeSvg height={22} width={22} color={Colors.textLight} />,
+  });
+
+  const toggleExpand = (label: string) => {
+    setExpandedMenus(prev => ({...prev, [label]: !prev[label]}));
+  };
+
+  const menuEmployeeItem = useMemo<menuProps[]>(() => {
+    const items: menuProps[] = [
+      {label: strings.profile, redirect: NAVIGATION.Profile},
+      {label: strings.educations, redirect: NAVIGATION.Profile},
+      {label: strings.families, redirect: NAVIGATION.Profile},
+      {label: strings.heads, redirect: NAVIGATION.Profile},
+      {label: strings.branch, redirect: NAVIGATION.Profile},
+      {label: strings.departments, redirect: NAVIGATION.Profile},
+      {label: strings.designations, redirect: NAVIGATION.Profile},
+      {label: strings.experiences, redirect: NAVIGATION.Profile},
+    ];
+
+    // if (profileDetail.employee_educations?.length) {
+    //   items.push({label: strings.educations, redirect: NAVIGATION.Profile});
+    // }
+    // if (profileDetail.employee_families?.length) {
+    //   items.push({label: strings.families, redirect: NAVIGATION.Profile});
+    // }
+    // if (profileDetail.employee_heads?.length) {
+    //   items.push({label: strings.heads, redirect: NAVIGATION.Profile});
+    // }
+    // if (profileDetail.branch) {
+    //   items.push({label: strings.branch, redirect: NAVIGATION.Profile});
+    // }
+    // if (profileDetail.employee_departments?.length) {
+    //   items.push({label: strings.departments, redirect: NAVIGATION.Profile});
+    // }
+    // if (profileDetail.employee_designations?.length) {
+    //   items.push({label: strings.designations, redirect: NAVIGATION.Profile});
+    // }
+    // if (profileDetail.employee_experiences?.length) {
+    //   items.push({label: strings.experiences, redirect: NAVIGATION.Profile});
+    // }
+
+    return items;
+  }, [profileDetail]);
+
+  const [menuItems, setMenuItems] = useState<menuProps[]>(menuEmployeeItem);
+
+  useEffect(() => {
+    if (selectModule) {
+      setMenuItems(selectModule.id == 'employee' ? menuEmployeeItem : []);
+    }
+  }, [selectModule]);
 
   useEffect(() => {
     if (revokeData) {
@@ -155,9 +221,7 @@ const CustomDrawer = ({navigation}: CommonProps) => {
     <View style={styles.container}>
       {/* Profile Section */}
       <View style={styles.profileSection}>
-        <Pressable
-          style={styles.profileRow}
-          onPress={() => navigate(NAVIGATION.Profile)}>
+        <View style={styles.profileRow}>
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>
               {FirstLatter(profileDetail?.first_name) +
@@ -172,8 +236,63 @@ const CustomDrawer = ({navigation}: CommonProps) => {
               ' ' +
               profileDetail?.last_name}
           </Text>
-        </Pressable>
+        </View>
       </View>
+
+      <SelectDropdown
+        data={modulesList}
+        disabled={isNull(modulesList)}
+        buttonStyle={[styles.inputStyleAcc]}
+        onSelect={(selectedItem: any, index: any) => {
+          setSelectModule({
+            name: selectedItem?.name,
+            id: selectedItem?.id,
+            icon: selectedItem?.icon,
+          });
+        }}
+        selectedRowTextStyle={{
+          color: Colors.textCl,
+          ...typography._14SofticesSemibold,
+        }}
+        rowTextStyle={{
+          color: Colors.textCl,
+          ...typography._14SofticesRegular,
+          textAlign: 'left',
+        }}
+        buttonTextAfterSelection={(selectedItem: any, index: any) => {
+          return selectedItem?.name;
+        }}
+        rowTextForSelection={(item: any, index: any) => {
+          return (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              {item?.icon}
+              <Text style={{marginLeft: ms(10)}}>{CFL(item?.name)}</Text>
+            </View>
+          );
+        }}
+        renderCustomizedButtonChild={(selectedItem: any) => {
+          return (
+            <InputField
+              value={selectModule.name}
+              onChangeText={() => setSelectModule({name: '', id: '', icon: ''})}
+              labelTxt={strings.modules}
+              placeholder={strings.productionPlaceholder}
+              editable={false}
+              leftIcon={selectModule.icon}
+              rightIcon={
+                <View style={{marginRight: ms(14)}}>
+                  <DropDownSvg
+                    height={22}
+                    width={22}
+                    color={Colors.textLight}
+                  />
+                </View>
+              }
+            />
+          );
+        }}
+      />
+
       <ScrollView>
         <View style={{flex: 1, pointerEvents: revokeLoading ? 'none' : 'auto'}}>
           {menuItems.map((item, index) => {
@@ -246,7 +365,7 @@ const DrawerItem = ({data, redirect, label, isSub = false}: any) => {
         },
       ]);
     } else {
-      navigate(redirect);
+      navigate(redirect, {title: label}, redirect == NAVIGATION.Profile);
       dispatch(setEndUrl(data));
     }
   };
@@ -311,6 +430,9 @@ const styles = StyleSheet.create({
   subLabel: {
     ...typography._18SofticesLight,
     color: Colors.textCl,
+  },
+  inputStyleAcc: {
+    width: '100%',
   },
 });
 

@@ -13,7 +13,6 @@ export interface ActionBarProps {
   title: string;
   LeftIcon?: any;
   onLeftPress?: () => void;
-  RightIcon?: any;
   onRightPress?: () => void;
   containerStyle?: ViewStyle;
 }

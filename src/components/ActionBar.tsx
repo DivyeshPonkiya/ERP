@@ -12,6 +12,7 @@ import {typography} from '../theme/typography';
 import {ActionBarProps} from './types';
 import {ACTIVE_OPACITY, hexToRGBA} from '../constants/constants';
 import {AddSvg} from '../assets/Images/svg/AddSvg';
+import {MenuSvg} from '../assets/Images/svg';
 
 interface AddButtonProps {
   onPress?: () => void;
@@ -32,7 +33,6 @@ const ActionBar = ({
   title,
   LeftIcon,
   onLeftPress,
-  RightIcon,
   onRightPress,
 }: ActionBarProps) => {
   return (
