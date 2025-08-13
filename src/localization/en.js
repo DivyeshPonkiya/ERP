@@ -240,4 +240,5 @@ export const en = {
   department: 'Department',
   designation: 'Designation',
   total_working_time_in_month: 'Total working months',
+  role: 'Role',
 };

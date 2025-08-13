@@ -124,22 +124,25 @@ const EducationSection = ({formData}: any) => {
                 {item?.start_year}
               </Text>
             </View>
-            <View style={styles.titleSubTitleRaw}>
-              <Text style={[styles.titleText, styles.width38]}>
-                {strings.end_year}:
-              </Text>
-              <Text style={[styles.subTitleText, styles.width63]}>
-                {item?.end_year}
-              </Text>
-            </View>
-            <View style={styles.titleSubTitleRaw}>
-              <Text style={[styles.titleText, styles.width38]}>
-                {strings.pursuing}:
-              </Text>
-              <Text style={[styles.subTitleText, styles.width63]}>
-                {item?.pursuing ? strings.yes : strings.no}
-              </Text>
-            </View>
+            {!item?.pursuing ? (
+              <View style={styles.titleSubTitleRaw}>
+                <Text style={[styles.titleText, styles.width38]}>
+                  {strings.end_year}:
+                </Text>
+                <Text style={[styles.subTitleText, styles.width63]}>
+                  {item?.end_year}
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.titleSubTitleRaw}>
+                <Text style={[styles.titleText, styles.width38]}>
+                  {strings.pursuing}:
+                </Text>
+                <Text style={[styles.subTitleText, styles.width63]}>
+                  {item?.pursuing ? strings.yes : strings.no}
+                </Text>
+              </View>
+            )}
           </View>
         );
       })}
@@ -201,12 +204,35 @@ const ExperienceSection = ({formData}: any) => {
                 {item?.end_month}/{item?.end_year}
               </Text>
             </View>
-            <View style={styles.titleSubTitleRaw}>
+          </View>
+        );
+      })}
+    </>
+  );
+};
+
+const HeadsSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        const head = item?.head;
+        const role = item?.role;
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
               <Text style={[styles.titleText, styles.width38]}>
-                {strings.pursuing}:
+                {strings.name}:
               </Text>
               <Text style={[styles.subTitleText, styles.width63]}>
-                {item?.pursuing ? strings.yes : strings.no}
+                {head?.first_name} {head?.middle_name} {head?.last_name}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.role}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {role?.name}
               </Text>
             </View>
           </View>
@@ -284,6 +310,17 @@ export default function Profile({route, navigation}: CommonProps) {
         {route?.params?.title == strings.experiences ? (
           details?.employee_experiences ? (
             <ExperienceSection formData={details?.employee_experiences} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
+
+        {route?.params?.title == strings.heads ? (
+          details?.employee_heads ? (
+            <HeadsSection formData={details?.employee_heads} />
           ) : (
             <EmptyState
               title={strings.noDataFound}

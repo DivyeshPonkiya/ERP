@@ -165,12 +165,13 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
     const items: menuProps[] = [
       {label: strings.profile, redirect: NAVIGATION.Profile},
       {label: strings.educations, redirect: NAVIGATION.Profile},
-      {label: strings.families, redirect: NAVIGATION.Profile},
+      // {label: strings.families, redirect: NAVIGATION.Profile},
       {label: strings.heads, redirect: NAVIGATION.Profile},
       {label: strings.branch, redirect: NAVIGATION.Profile},
       {label: strings.departments, redirect: NAVIGATION.Profile},
       {label: strings.designations, redirect: NAVIGATION.Profile},
       {label: strings.experiences, redirect: NAVIGATION.Profile},
+      {label: strings.logout, redirect: 'power'},
     ];
 
     // if (profileDetail.employee_educations?.length) {
