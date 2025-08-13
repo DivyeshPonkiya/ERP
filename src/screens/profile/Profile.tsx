@@ -14,6 +14,7 @@ import SafeAreaWrapper from '../../components/SafeAreaWrapper';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {CommonProps} from '../types';
+import EmptyState from '../../components/EmptyState';
 
 const ProfileSection = ({formData}: any) => {
   return (
@@ -77,6 +78,144 @@ const ProfileSection = ({formData}: any) => {
   );
 };
 
+const EducationSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.degree}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.degree}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.university}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.university}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.college}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.college}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.specialization}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.specialization}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.start_year}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.start_year}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.end_year}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.end_year}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.pursuing}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.pursuing ? strings.yes : strings.no}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </>
+  );
+};
+
+const ExperienceSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.companyName}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.company_name}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.department}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.department}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.designation}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.designation}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.total_working_time_in_month}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.total_working_time_in_month}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.start_year}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.start_month}/{item?.start_year}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.end_year}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.end_month}/{item?.end_year}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.pursuing}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.pursuing ? strings.yes : strings.no}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </>
+  );
+};
+
 export default function Profile({route, navigation}: CommonProps) {
   const dispatch = useDispatch();
 
@@ -95,6 +234,7 @@ export default function Profile({route, navigation}: CommonProps) {
     onboardingDate: '',
     nationality: '',
   });
+  const details = profileData?.employee;
 
   useEffect(() => {
     if (!isNull(profileData)) {
@@ -129,6 +269,28 @@ export default function Profile({route, navigation}: CommonProps) {
         {route?.params?.title == strings.profile ? (
           <ProfileSection formData={formData} />
         ) : null}
+
+        {route?.params?.title == strings.educations ? (
+          details?.employee_educations ? (
+            <EducationSection formData={details?.employee_educations} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
+
+        {route?.params?.title == strings.experiences ? (
+          details?.employee_experiences ? (
+            <ExperienceSection formData={details?.employee_experiences} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
       </ScrollView>
     </SafeAreaWrapper>
   );
@@ -137,7 +299,6 @@ export default function Profile({route, navigation}: CommonProps) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: ms(20),
-    alignItems: 'center',
     paddingBottom: ms(50),
   },
   avatar: {
@@ -148,32 +309,33 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.borderCl,
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
   },
   avatarText: {
     ...typography._26SofticesExtraBold,
     color: Colors.primary,
   },
 
-  inputContainer: {
-    alignSelf: 'stretch',
-    marginBottom: 16,
+  boxView: {
+    borderWidth: ms(1),
+    marginTop: ms(20),
+    paddingHorizontal: ms(10),
+    borderRadius: ms(10),
+    borderColor: Colors.borderCl,
   },
-  label: {
-    fontWeight: '600',
-    marginBottom: 6,
-    fontSize: 14,
-    color: '#333',
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 12,
-    borderColor: '#E0E0E0',
-    borderWidth: 1,
-    fontSize: 16,
-  },
-  passwordRow: {
+  titleSubTitleRaw: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: ms(10),
   },
+  titleText: {
+    ...typography._16SofticesBold,
+    color: Colors.textCl,
+  },
+  subTitleText: {
+    ...typography._16SofticesSemibold,
+    color: Colors.textCl,
+  },
+  width38: {width: '38%'},
+  width63: {width: '63%', marginLeft: ms(5)},
 });

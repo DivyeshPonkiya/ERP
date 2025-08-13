@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import {strings} from '../../localization';
 import {Colors} from '../../theme/variables';
@@ -9,11 +9,18 @@ import {CommonProps} from '../types';
 import ActionBar from '../../components/ActionBar';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../store/store';
+import {fetchProfile} from '../../createAsyncThunk/authAsyncThunk';
+import {urlEndPoint} from '../../constants/urlEndPoint';
 
 const Dashboard = ({navigation}: CommonProps) => {
   const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchProfile({endPoint: urlEndPoint.profile}));
+  }, []);
 
-  const onRefresh = () => {};
+  const onRefresh = () => {
+    dispatch(fetchProfile({endPoint: urlEndPoint.profile}));
+  };
 
   return (
     <SafeAreaWrapper
