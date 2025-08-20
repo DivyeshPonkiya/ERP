@@ -243,4 +243,6 @@ export const en = {
   role: 'Role',
   start_date: 'Start date',
   revoke_date: 'Revoke date',
+  holidays: 'Holidays',
+  na: 'NA',
 };

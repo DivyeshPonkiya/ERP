@@ -14,7 +14,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../store/store';
 import {CommonProps} from '../types';
 import EmptyState from '../../components/EmptyState';
-import {fetchProfile} from '../../createAsyncThunk/authAsyncThunk';
+import {
+  fetchHolidays,
+  fetchProfile,
+} from '../../createAsyncThunk/authAsyncThunk';
 import {urlEndPoint} from '../../constants/urlEndPoint';
 
 const ProfileSection = ({formData}: any) => {
@@ -27,54 +30,149 @@ const ProfileSection = ({formData}: any) => {
         </Text>
       </View>
 
-      {formData.name ? (
-        <InputField
-          value={formData.name}
-          labelTxt={strings.name}
-          placeholder={strings.name}
-          editable={false}
-        />
-      ) : null}
-      {formData.companyEmail ? (
-        <InputField
-          value={formData.companyEmail}
-          labelTxt={strings.companyEmail}
-          placeholder={strings.companyEmail}
-          editable={false}
-        />
-      ) : null}
-      {formData.gender ? (
-        <InputField
-          value={formData.gender}
-          labelTxt={strings.gender}
-          placeholder={strings.gender}
-          editable={false}
-        />
-      ) : null}
-      {formData.joiningDate ? (
-        <InputField
-          value={formData.joiningDate}
-          labelTxt={strings.joiningDate}
-          placeholder={strings.joiningDate}
-          editable={false}
-        />
-      ) : null}
-      {formData.onboardingDate ? (
-        <InputField
-          value={formData.onboardingDate}
-          labelTxt={strings.onboardingDate}
-          placeholder={strings.enterEmailAddress}
-          editable={false}
-        />
-      ) : null}
-      {formData.nationality ? (
-        <InputField
-          value={formData.nationality}
-          labelTxt={strings.nationality}
-          placeholder={strings.nationality}
-          editable={false}
-        />
-      ) : null}
+      <InputField
+        value={formData.name}
+        labelTxt={strings.name}
+        placeholder={strings.na}
+        editable={false}
+      />
+      <InputField
+        value={formData.companyEmail}
+        labelTxt={strings.companyEmail}
+        placeholder={strings.na}
+        editable={false}
+      />
+      <InputField
+        value={formData.gender}
+        labelTxt={strings.gender}
+        placeholder={strings.na}
+        editable={false}
+      />
+      <InputField
+        value={formData.joiningDate}
+        labelTxt={strings.joiningDate}
+        placeholder={strings.na}
+        editable={false}
+      />
+      <InputField
+        value={formData.onboardingDate}
+        labelTxt={strings.onboardingDate}
+        placeholder={strings.na}
+        editable={false}
+      />
+      <InputField
+        value={formData.nationality}
+        labelTxt={strings.nationality}
+        placeholder={strings.na}
+        editable={false}
+      />
+    </>
+  );
+};
+
+const HeadsSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        const head = item?.head;
+        const role = item?.role;
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.name}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {head?.first_name} {head?.middle_name} {head?.last_name}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.role}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {role?.name}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </>
+  );
+};
+
+const DesignationsSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        const designation = item?.designation;
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.designation}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {designation?.title}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.start_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.start_date}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.revoke_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.revoke_date || '-'}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </>
+  );
+};
+
+const DepartmentSection = ({formData}: any) => {
+  return (
+    <>
+      {formData?.map((item: any, index: any) => {
+        const department = item?.department;
+        return (
+          <View style={styles.boxView}>
+            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.department}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {department?.title}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.start_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.start_date}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.revoke_date}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.revoke_date || '-'}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
     </>
   );
 };
@@ -203,104 +301,58 @@ const ExperienceSection = ({formData}: any) => {
   );
 };
 
-const HeadsSection = ({formData}: any) => {
+const HolidaysSection = ({formData}: any) => {
   return (
     <>
       {formData?.map((item: any, index: any) => {
-        const head = item?.head;
-        const role = item?.role;
         return (
           <View style={styles.boxView}>
             <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
               <Text style={[styles.titleText, styles.width38]}>
-                {strings.name}:
+                {strings.companyName}:
               </Text>
               <Text style={[styles.subTitleText, styles.width63]}>
-                {head?.first_name} {head?.middle_name} {head?.last_name}
+                {item?.company_name}
               </Text>
             </View>
             <View style={styles.titleSubTitleRaw}>
-              <Text style={[styles.titleText, styles.width38]}>
-                {strings.role}:
-              </Text>
-              <Text style={[styles.subTitleText, styles.width63]}>
-                {role?.name}
-              </Text>
-            </View>
-          </View>
-        );
-      })}
-    </>
-  );
-};
-
-const DesignationsSection = ({formData}: any) => {
-  return (
-    <>
-      {formData?.map((item: any, index: any) => {
-        const designation = item?.designation;
-        return (
-          <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
-              <Text style={[styles.titleText, styles.width38]}>
-                {strings.designation}:
-              </Text>
-              <Text style={[styles.subTitleText, styles.width63]}>
-                {designation?.title}
-              </Text>
-            </View>
-            <View style={styles.titleSubTitleRaw}>
-              <Text style={[styles.titleText, styles.width38]}>
-                {strings.start_date}:
-              </Text>
-              <Text style={[styles.subTitleText, styles.width63]}>
-                {item?.start_date}
-              </Text>
-            </View>
-            <View style={styles.titleSubTitleRaw}>
-              <Text style={[styles.titleText, styles.width38]}>
-                {strings.revoke_date}:
-              </Text>
-              <Text style={[styles.subTitleText, styles.width63]}>
-                {item?.revoke_date || '-'}
-              </Text>
-            </View>
-          </View>
-        );
-      })}
-    </>
-  );
-};
-
-const DepartmentSection = ({formData}: any) => {
-  return (
-    <>
-      {formData?.map((item: any, index: any) => {
-        const department = item?.department;
-        return (
-          <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
               <Text style={[styles.titleText, styles.width38]}>
                 {strings.department}:
               </Text>
               <Text style={[styles.subTitleText, styles.width63]}>
-                {department?.title}
+                {item?.department}
               </Text>
             </View>
             <View style={styles.titleSubTitleRaw}>
               <Text style={[styles.titleText, styles.width38]}>
-                {strings.start_date}:
+                {strings.designation}:
               </Text>
               <Text style={[styles.subTitleText, styles.width63]}>
-                {item?.start_date}
+                {item?.designation}
               </Text>
             </View>
             <View style={styles.titleSubTitleRaw}>
               <Text style={[styles.titleText, styles.width38]}>
-                {strings.revoke_date}:
+                {strings.total_working_time_in_month}:
               </Text>
               <Text style={[styles.subTitleText, styles.width63]}>
-                {item?.revoke_date || '-'}
+                {item?.total_working_time_in_month}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.start_year}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.start_month}/{item?.start_year}
+              </Text>
+            </View>
+            <View style={styles.titleSubTitleRaw}>
+              <Text style={[styles.titleText, styles.width38]}>
+                {strings.end_year}:
+              </Text>
+              <Text style={[styles.subTitleText, styles.width63]}>
+                {item?.end_month}/{item?.end_year}
               </Text>
             </View>
           </View>
@@ -313,10 +365,13 @@ const DepartmentSection = ({formData}: any) => {
 export default function Profile({route, navigation}: CommonProps) {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [profileData, profileLoading] = useSelector((state: RootState) => [
-    state.authSlice.profileData,
-    state.authSlice.profileLoading,
-  ]);
+  const [profileData, holidaysData, profileLoading, holidaysLoading] =
+    useSelector((state: RootState) => [
+      state.authSlice.profileData,
+      state.authSlice.holidaysData,
+      state.authSlice.profileLoading,
+      state.authSlice.holidaysLoading,
+    ]);
 
   const [formData, setFormData] = useState({
     first_name: '',
@@ -349,8 +404,18 @@ export default function Profile({route, navigation}: CommonProps) {
     }
   }, [profileData]);
 
+  useEffect(() => {
+    if (!isNull(route?.params?.title == strings.holidays)) {
+      dispatch(fetchHolidays({endPoint: urlEndPoint.holidays}));
+    }
+  }, [route]);
+
   const onRefresh = () => {
-    dispatch(fetchProfile({endPoint: urlEndPoint.profile}));
+    if (!isNull(route?.params?.title == strings.holidays)) {
+      dispatch(fetchHolidays({endPoint: urlEndPoint.holidays}));
+    } else {
+      dispatch(fetchProfile({endPoint: urlEndPoint.profile}));
+    }
   };
 
   return (
@@ -366,7 +431,7 @@ export default function Profile({route, navigation}: CommonProps) {
         refreshControl={
           <RefreshControl
             enabled={true}
-            refreshing={profileLoading}
+            refreshing={profileLoading || holidaysLoading}
             onRefresh={onRefresh}
             colors={[Colors.primary]}
             tintColor={Colors.primary}
@@ -376,30 +441,8 @@ export default function Profile({route, navigation}: CommonProps) {
           <ProfileSection formData={formData} />
         ) : null}
 
-        {route?.params?.title == strings.educations ? (
-          details?.employee_educations ? (
-            <EducationSection formData={details?.employee_educations} />
-          ) : (
-            <EmptyState
-              title={strings.noDataFound}
-              description={strings.noDataFoundDes}
-            />
-          )
-        ) : null}
-
-        {route?.params?.title == strings.experiences ? (
-          details?.employee_experiences ? (
-            <ExperienceSection formData={details?.employee_experiences} />
-          ) : (
-            <EmptyState
-              title={strings.noDataFound}
-              description={strings.noDataFoundDes}
-            />
-          )
-        ) : null}
-
         {route?.params?.title == strings.heads ? (
-          details?.employee_heads ? (
+          !isNull(details?.employee_heads) ? (
             <HeadsSection formData={details?.employee_heads} />
           ) : (
             <EmptyState
@@ -410,7 +453,7 @@ export default function Profile({route, navigation}: CommonProps) {
         ) : null}
 
         {route?.params?.title == strings.designations ? (
-          details?.employee_designations ? (
+          !isNull(details?.employee_designations) ? (
             <DesignationsSection formData={details?.employee_designations} />
           ) : (
             <EmptyState
@@ -421,8 +464,41 @@ export default function Profile({route, navigation}: CommonProps) {
         ) : null}
 
         {route?.params?.title == strings.departments ? (
-          details?.employee_departments ? (
+          !isNull(details?.employee_departments) ? (
             <DepartmentSection formData={details?.employee_departments} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
+
+        {route?.params?.title == strings.educations ? (
+          !isNull(details?.employee_educations) ? (
+            <EducationSection formData={details?.employee_educations} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
+
+        {route?.params?.title == strings.experiences ? (
+          !isNull(details?.employee_experiences) ? (
+            <ExperienceSection formData={details?.employee_experiences} />
+          ) : (
+            <EmptyState
+              title={strings.noDataFound}
+              description={strings.noDataFoundDes}
+            />
+          )
+        ) : null}
+
+        {route?.params?.title == strings.holidays ? (
+          !isNull(holidaysData) ? (
+            <HolidaysSection formData={holidaysData?.holidays} />
           ) : (
             <EmptyState
               title={strings.noDataFound}

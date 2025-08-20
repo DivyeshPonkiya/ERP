@@ -85,10 +85,4 @@ export const fetchLogin = createPostThunk('oauth/authorize');
 export const fetchToken = createPostThunk('oauth/token');
 export const fetchRevoke = createPostThunk('oauth/revoke');
 export const fetchProfile = createGetThunk('profile');
-
-export const fetchRegister = createPostThunk('authorizations/sign_up');
-export const fetchForgetPassword = createPostThunk('forget-password');
-export const fetchResetPassword = createPostThunk('reset-password');
-export const fetchProfileUpdate = createPatchThunk('profile/update');
-export const fetchUpdatePassword = createPatchThunk('profile/update_password');
-export const fetchDashboard = createGetThunk('dashboard');
+export const fetchHolidays = createGetThunk('holidays');

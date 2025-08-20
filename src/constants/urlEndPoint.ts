@@ -2,6 +2,7 @@ export const urlEndPoint = {
   login: 'employees/oauth/authorize',
   token: 'employees/oauth/token',
   profile: 'employees/me',
+  holidays: 'employees/holidays',
   revoke: 'employees/oauth/revoke',
 
   sign_up: 'authorizations/sign_up',

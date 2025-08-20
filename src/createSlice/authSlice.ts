@@ -1,15 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {
-  fetchDashboard,
-  fetchForgetPassword,
+  fetchHolidays,
   fetchLogin,
   fetchProfile,
-  fetchProfileUpdate,
-  fetchRegister,
-  fetchResetPassword,
   fetchRevoke,
   fetchToken,
-  fetchUpdatePassword,
 } from '../createAsyncThunk/authAsyncThunk';
 
 interface AppState {
@@ -27,23 +22,8 @@ interface AppState {
   profileData: any;
   profileLoading: boolean;
 
-  registerData: any;
-  registerLoading: boolean;
-
-  forgetPassData: any;
-  forgetPassLoading: boolean;
-
-  resetPasswordData: any;
-  resetPasswordLoading: boolean;
-
-  profileUpdateData: any;
-  profileUpdateLoading: boolean;
-
-  updatePasswordData: any;
-  updatePasswordLoading: boolean;
-
-  dashboardData: any;
-  dashboardLoading: boolean;
+  holidaysData: any;
+  holidaysLoading: boolean;
 }
 
 //  Initial app state
@@ -62,23 +42,8 @@ const initialState: AppState = {
   profileData: null,
   profileLoading: false,
 
-  registerData: null,
-  registerLoading: false,
-
-  forgetPassData: null,
-  forgetPassLoading: false,
-
-  resetPasswordData: null,
-  resetPasswordLoading: false,
-
-  profileUpdateData: null,
-  profileUpdateLoading: false,
-
-  updatePasswordData: null,
-  updatePasswordLoading: false,
-
-  dashboardData: null,
-  dashboardLoading: false,
+  holidaysData: null,
+  holidaysLoading: false,
 };
 
 // to reduce repetitive code
@@ -119,38 +84,17 @@ const authSlice = createSlice({
     setProfileData(state, action: PayloadAction<any>) {
       state.profileData = action.payload;
     },
+    setHolidaysData(state, action: PayloadAction<any>) {
+      state.holidaysData = action.payload;
+    },
 
-    setRegisterData(state, action: PayloadAction<any>) {
-      state.registerData = action.payload;
-    },
-    setForgetPassData(state, action: PayloadAction<any>) {
-      state.forgetPassData = action.payload;
-    },
-    setResetPasswordData(state, action: PayloadAction<any>) {
-      state.resetPasswordData = action.payload;
-    },
-    setProfileUpdateData(state, action: PayloadAction<any>) {
-      state.profileUpdateData = action.payload;
-    },
-    setUpdatePasswordData(state, action: PayloadAction<any>) {
-      state.updatePasswordData = action.payload;
-    },
-    setDashboardData(state, action: PayloadAction<any>) {
-      state.dashboardData = action.payload;
-    },
     setErrorData(state, action: PayloadAction<any>) {
       state.error = null;
       state.loginLoading = false;
       state.tokenLoading = false;
       state.revokeLoading = false;
       state.profileLoading = false;
-
-      state.registerLoading = false;
-      state.forgetPassLoading = false;
-      state.resetPasswordLoading = false;
-      state.profileUpdateLoading = false;
-      state.updatePasswordLoading = false;
-      state.dashboardLoading = false;
+      state.holidaysLoading = false;
     },
   },
   extraReducers: builder => {
@@ -190,80 +134,14 @@ const authSlice = createSlice({
       )
       .addCase(fetchProfile.rejected, handleRejected('profileLoading'));
 
-    //Using helper functions for fetchRegister
+    //  Using helper functions for fetchHolidays
     builder
-      .addCase(fetchRegister.pending, handlePending('profileLoading'))
+      .addCase(fetchHolidays.pending, handlePending('holidaysLoading'))
       .addCase(
-        fetchRegister.fulfilled,
-        handleFulfilled('registerData', 'registerLoading'),
+        fetchHolidays.fulfilled,
+        handleFulfilled('holidaysData', 'holidaysLoading'),
       )
-      .addCase(fetchRegister.rejected, handleRejected('registerLoading'));
-
-    //Using helper functions for fetchForgetPassword
-    builder
-      .addCase(fetchForgetPassword.pending, handlePending('forgetPassLoading'))
-      .addCase(
-        fetchForgetPassword.fulfilled,
-        handleFulfilled('forgetPassData', 'forgetPassLoading'),
-      )
-      .addCase(
-        fetchForgetPassword.rejected,
-        handleRejected('forgetPassLoading'),
-      );
-
-    //Using helper functions for fetchResetPassword
-    builder
-      .addCase(
-        fetchResetPassword.pending,
-        handlePending('resetPasswordLoading'),
-      )
-      .addCase(
-        fetchResetPassword.fulfilled,
-        handleFulfilled('resetPasswordData', 'resetPasswordLoading'),
-      )
-      .addCase(
-        fetchResetPassword.rejected,
-        handleRejected('resetPasswordLoading'),
-      );
-
-    //  Using helper functions for fetchProfileUpdate
-    builder
-      .addCase(
-        fetchProfileUpdate.pending,
-        handlePending('profileUpdateLoading'),
-      )
-      .addCase(
-        fetchProfileUpdate.fulfilled,
-        handleFulfilled('profileUpdateData', 'profileUpdateLoading'),
-      )
-      .addCase(
-        fetchProfileUpdate.rejected,
-        handleRejected('profileUpdateLoading'),
-      );
-
-    //  Using helper functions for fetchUpdatePassword
-    builder
-      .addCase(
-        fetchUpdatePassword.pending,
-        handlePending('updatePasswordLoading'),
-      )
-      .addCase(
-        fetchUpdatePassword.fulfilled,
-        handleFulfilled('updatePasswordData', 'updatePasswordLoading'),
-      )
-      .addCase(
-        fetchUpdatePassword.rejected,
-        handleRejected('updatePasswordLoading'),
-      );
-
-    //  Using helper functions for fetchDashboard
-    builder
-      .addCase(fetchDashboard.pending, handlePending('dashboardLoading'))
-      .addCase(
-        fetchDashboard.fulfilled,
-        handleFulfilled('dashboardData', 'dashboardLoading'),
-      )
-      .addCase(fetchDashboard.rejected, handleRejected('dashboardLoading'));
+      .addCase(fetchHolidays.rejected, handleRejected('holidaysLoading'));
   },
 });
 
@@ -272,13 +150,8 @@ export const {
   setTokenData,
   setRevokeData,
   setProfileData,
+  setHolidaysData,
 
-  setRegisterData,
-  setForgetPassData,
-  setResetPasswordData,
-  setProfileUpdateData,
-  setUpdatePasswordData,
-  setDashboardData,
   setErrorData,
 } = authSlice.actions;
 
