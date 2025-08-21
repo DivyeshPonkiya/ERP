@@ -28,10 +28,10 @@ import {
   fetchWork,
   fetchWorkCreate,
   fetchWorkEdit,
-} from '../../createAsyncThunk/worksThunk';
+} from '../../createAsyncThunk/employeeThunk';
 
 import {AppDispatch} from '../../store/store';
-import {setAddWorkData, setEditWorkData} from '../../createSlice/worksSlice';
+import {setAddWorkData, setEditWorkData} from '../../createSlice/employeeSlice';
 import _ from 'lodash';
 import {ParamsProps} from '../types';
 

@@ -51,14 +51,16 @@ import SelectDropdown from '../components/SelectDropdown/SelectDropdown';
 import InputField from '../components/InputField';
 
 interface MenuSubItem {
-  id: string;
-  label: string;
+  id?: any;
+  label?: string;
+  redirect?: string;
+
 }
 
 interface menuProps {
   label: string;
   redirect: string;
-  isExpandable?: boolean;
+  isExpandable?: boolean; 
   subItems?: MenuSubItem[];
 }
 
@@ -162,40 +164,26 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
 
   const menuEmployeeItem = useMemo<menuProps[]>(() => {
     const items: menuProps[] = [
-      {label: strings.profile, redirect: NAVIGATION.Profile},
-      {label: strings.heads, redirect: NAVIGATION.Profile},
-      {label: strings.designations, redirect: NAVIGATION.Profile},
-      {label: strings.departments, redirect: NAVIGATION.Profile},
-      {label: strings.educations, redirect: NAVIGATION.Profile},
-      {label: strings.experiences, redirect: NAVIGATION.Profile},
+      {label: strings.dashboard, redirect: NAVIGATION.Dashboard},
+       {
+      label: strings.profile,
+      redirect: NAVIGATION.Profile,
+      isExpandable: true,
+      subItems: [
+      {id:1,label: strings.basicDetails, redirect: NAVIGATION.Profile},
+      {id:2,label: strings.heads, redirect: NAVIGATION.Profile},
+      {id:3,label: strings.designations, redirect: NAVIGATION.Profile},
+      {id:4,label: strings.departments, redirect: NAVIGATION.Profile},
+      {id:5,label: strings.educations, redirect: NAVIGATION.Profile},
+      {id:6,label: strings.experiences, redirect: NAVIGATION.Profile},
+      ],
+    },
       {label: strings.holidays, redirect: NAVIGATION.Profile},
       {label: strings.logout, redirect: 'power'},
 
-      // {label: strings.families, redirect: NAVIGATION.Profile},
-      // {label: strings.branch, redirect: NAVIGATION.Profile},
     ];
 
-    // if (profileDetail.employee_educations?.length) {
-    //   items.push({label: strings.educations, redirect: NAVIGATION.Profile});
-    // }
-    // if (profileDetail.employee_families?.length) {
-    //   items.push({label: strings.families, redirect: NAVIGATION.Profile});
-    // }
-    // if (profileDetail.employee_heads?.length) {
-    //   items.push({label: strings.heads, redirect: NAVIGATION.Profile});
-    // }
-    // if (profileDetail.branch) {
-    //   items.push({label: strings.branch, redirect: NAVIGATION.Profile});
-    // }
-    // if (profileDetail.employee_departments?.length) {
-    //   items.push({label: strings.departments, redirect: NAVIGATION.Profile});
-    // }
-    // if (profileDetail.employee_designations?.length) {
-    //   items.push({label: strings.designations, redirect: NAVIGATION.Profile});
-    // }
-    // if (profileDetail.employee_experiences?.length) {
-    //   items.push({label: strings.experiences, redirect: NAVIGATION.Profile});
-    // }
+ 
 
     return items;
   }, [profileDetail]);
@@ -304,11 +292,10 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
               onChangeText={() =>
                 setSelectModule({name: '', id: '', icon: <></>})
               }
-              labelTxt={strings.modules}
+              labelTxt={null}
               placeholder={strings.productionPlaceholder}
               editable={false}
-              leftIcon={selectModule.icon}
-              inputStyle={{...typography._18SofticesRegular}}
+              inputStyle={{...typography._18SofticesMedium}}
               rightIcon={
                 <View style={{marginRight: ms(14)}}>
                   <DropDownSvg

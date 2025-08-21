@@ -3,7 +3,7 @@ import authSlice from './authSlice';
 import productsSlice from './productsSlice';
 import customersSlice from './customersSlice';
 import productionsSlice from './productionsSlice';
-import worksSlice from './worksSlice';
+import worksSlice from './employeeSlice';
 import reportSlice from './reportSlice';
 import stocksSlice from './stocksSlice';
 import salesSlice from './salesSlice';

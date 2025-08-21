@@ -32,7 +32,7 @@ interface Props extends TextInputProps {
   inputKeyboardType?: TextInputProps['keyboardType'];
   inputReturnKeyType?: TextInputProps['returnKeyType'];
   placeholder?: string;
-  labelTxt?: string;
+  labelTxt?: any;
   validationStatus?: 'default' | 'error' | 'valid';
   errorMessage?: string;
   maxLength?: number;

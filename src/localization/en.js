@@ -49,7 +49,7 @@ export const en = {
   register: 'Register',
 
   //Home labels
-  dashboard: 'Dashboard',
+  dashboard: 'Home',
   termUse: 'Terms of Use',
   privacyPolicy: 'Privacy Policy',
 
@@ -222,6 +222,8 @@ export const en = {
   modules: 'Modules',
 
   profile: 'Profile',
+  basicDetails: 'Basic Details',
+
   educations: 'Educations',
   families: 'Families',
   heads: 'Heads',

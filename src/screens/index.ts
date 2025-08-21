@@ -2,7 +2,7 @@
 
 import EditProfile from '../screens/profile/EditProfile';
 import PrivacyPolicy from '../screens/profile/PrivacyPolicy';
-import Profile from '../screens/profile/Profile';
+import Profile from '../screens/employee/Profile';
 import TermsOfUse from '../screens/profile/TermsOfUse';
 
 import SalesScreen from '../screens/sales/SalesScreen';

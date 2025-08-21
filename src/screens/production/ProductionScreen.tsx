@@ -48,7 +48,7 @@ import SelectDropdown from '../../components/SelectDropdown/SelectDropdown';
 import ReusableFilterModal from '../../components/ReusableFilterModal';
 import LoadViewList from '../../components/LoadViewList';
 import ToastMessage from '../../components/ToastMessage';
-import {fetchWorkSearch} from '../../createAsyncThunk/worksThunk';
+import {fetchWorkSearch} from '../../createAsyncThunk/employeeThunk';
 import BottomDateRangeModal from '../../components/BottomDateRangeModal';
 import moment from 'moment';
 import {fetchProductsSearch} from '../../createAsyncThunk/productsThunk';

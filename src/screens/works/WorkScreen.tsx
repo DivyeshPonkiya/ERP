@@ -37,9 +37,9 @@ import SelectDropdown from '../../components/SelectDropdown/SelectDropdown';
 import WorksItem from './WorksItem';
 
 import {AppDispatch} from '../../store/store';
-import {fetchWork, fetchWorkDelete} from '../../createAsyncThunk/worksThunk';
+import {fetchWork, fetchWorkDelete} from '../../createAsyncThunk/employeeThunk';
 import {FontStyle} from '../../theme';
-import {setDeleteWorkData} from '../../createSlice/worksSlice';
+import {setDeleteWorkData} from '../../createSlice/employeeSlice';
 import ToastMessage from '../../components/ToastMessage';
 import _ from 'lodash';
 
