@@ -45,7 +45,6 @@ import _ from 'lodash';
 import ReportItem from './ReportItem';
 import moment from 'moment';
 
-import DateRangePicker from '../../components/DateRangePicker';
 import BottomDateRangeModal from '../../components/BottomDateRangeModal';
 
 const ReportScreen = ({route, navigation}: any) => {

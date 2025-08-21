@@ -64,6 +64,7 @@ const WorksScreen = () => {
     DeleteWorkLoading,
     error,
   ] = useSelector((state: RootState) => [
+    
     state.worksSlice.WorkListData,
     state.worksSlice.WorkListLoading,
 

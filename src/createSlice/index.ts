@@ -3,7 +3,7 @@ import authSlice from './authSlice';
 import productsSlice from './productsSlice';
 import customersSlice from './customersSlice';
 import productionsSlice from './productionsSlice';
-import worksSlice from './employeeSlice';
+import employeeSlice from './employeeSlice';
 import reportSlice from './reportSlice';
 import stocksSlice from './stocksSlice';
 import salesSlice from './salesSlice';
@@ -15,7 +15,7 @@ const appReducer = combineReducers({
   productsSlice: productsSlice,
   customersSlice: customersSlice,
   productionsSlice: productionsSlice,
-  worksSlice: worksSlice,
+  employeeSlice: employeeSlice,
   reportSlice: reportSlice,
   stocksSlice: stocksSlice,
   salesSlice: salesSlice,

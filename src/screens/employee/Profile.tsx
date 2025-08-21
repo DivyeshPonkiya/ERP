@@ -1,26 +1,27 @@
 // Profile.tsx
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, RefreshControl} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import ActionBar from '../../components/ActionBar';
-import {DrawerSvg} from '../../assets/Images/svg';
-import {ms} from '../../theme/spacing';
-import {typography} from '../../theme/typography';
-import {Colors} from '../../theme/variables';
+import { DrawerSvg } from '../../assets/Images/svg';
+import { ms } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
+import { Colors } from '../../theme/variables';
 import InputField from '../../components/InputField';
-import {strings} from '../../localization';
-import {FirstLatter, isNull} from '../../constants/constants';
+import { strings } from '../../localization';
+import { FirstLatter, isNull } from '../../constants/constants';
 import SafeAreaWrapper from '../../components/SafeAreaWrapper';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../../store/store';
-import {CommonProps} from '../types';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { CommonProps } from '../types';
 import EmptyState from '../../components/EmptyState';
 import {
   fetchHolidays,
   fetchProfile,
 } from '../../createAsyncThunk/authAsyncThunk';
-import {urlEndPoint} from '../../constants/urlEndPoint';
+import { urlEndPoint } from '../../constants/urlEndPoint';
+import { fetchEmployeeShow } from '../../createAsyncThunk/employeeThunk';
 
-const ProfileSection = ({formData}: any) => {
+const ProfileSection = ({ formData }: any) => {
   return (
     <>
       <View style={styles.avatar}>
@@ -36,7 +37,7 @@ const ProfileSection = ({formData}: any) => {
         placeholder={strings.na}
         editable={false}
       />
-      
+
       <InputField
         value={formData.companyEmail}
         labelTxt={strings.companyEmail}
@@ -71,7 +72,7 @@ const ProfileSection = ({formData}: any) => {
   );
 };
 
-const HeadsSection = ({formData}: any) => {
+const HeadsSection = ({ formData }: any) => {
   return (
     <>
       {formData?.map((item: any, index: any) => {
@@ -79,7 +80,7 @@ const HeadsSection = ({formData}: any) => {
         const role = item?.role;
         return (
           <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+            <View style={[styles.titleSubTitleRaw, { paddingTop: ms(10) }]}>
               <Text style={[styles.titleText, styles.width38]}>
                 {strings.name}:
               </Text>
@@ -102,14 +103,14 @@ const HeadsSection = ({formData}: any) => {
   );
 };
 
-const DesignationsSection = ({formData}: any) => {
+const DesignationsSection = ({ formData }: any) => {
   return (
     <>
       {formData?.map((item: any, index: any) => {
         const designation = item?.designation;
         return (
           <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+            <View style={[styles.titleSubTitleRaw, { paddingTop: ms(10) }]}>
               <Text style={[styles.titleText, styles.width38]}>
                 {strings.designation}:
               </Text>
@@ -140,14 +141,14 @@ const DesignationsSection = ({formData}: any) => {
   );
 };
 
-const DepartmentSection = ({formData}: any) => {
+const DepartmentSection = ({ formData }: any) => {
   return (
     <>
       {formData?.map((item: any, index: any) => {
         const department = item?.department;
         return (
           <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+            <View style={[styles.titleSubTitleRaw, { paddingTop: ms(10) }]}>
               <Text style={[styles.titleText, styles.width38]}>
                 {strings.department}:
               </Text>
@@ -178,13 +179,13 @@ const DepartmentSection = ({formData}: any) => {
   );
 };
 
-const EducationSection = ({formData}: any) => {
+const EducationSection = ({ formData }: any) => {
   return (
     <>
       {formData?.map((item: any, index: any) => {
         return (
           <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+            <View style={[styles.titleSubTitleRaw, { paddingTop: ms(10) }]}>
               <Text style={[styles.titleText, styles.width38]}>
                 {strings.degree}:
               </Text>
@@ -241,13 +242,13 @@ const EducationSection = ({formData}: any) => {
   );
 };
 
-const ExperienceSection = ({formData}: any) => {
+const ExperienceSection = ({ formData }: any) => {
   return (
     <>
       {formData?.map((item: any, index: any) => {
         return (
           <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+            <View style={[styles.titleSubTitleRaw, { paddingTop: ms(10) }]}>
               <Text style={[styles.titleText, styles.width38]}>
                 {strings.companyName}:
               </Text>
@@ -302,13 +303,13 @@ const ExperienceSection = ({formData}: any) => {
   );
 };
 
-const HolidaysSection = ({formData}: any) => {
+const HolidaysSection = ({ formData }: any) => {
   return (
     <>
       {formData?.map((item: any, index: any) => {
         return (
           <View style={styles.boxView}>
-            <View style={[styles.titleSubTitleRaw, {paddingTop: ms(10)}]}>
+            <View style={[styles.titleSubTitleRaw, { paddingTop: ms(10) }]}>
               <Text style={[styles.titleText, styles.width38]}>
                 {strings.companyName}:
               </Text>
@@ -363,14 +364,17 @@ const HolidaysSection = ({formData}: any) => {
   );
 };
 
-export default function Profile({route, navigation}: CommonProps) {
+export default function Profile({ route, navigation }: CommonProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const [refreshMe, setRefreshMe] = useState(false);
 
-  const [profileData, holidaysData, profileLoading, holidaysLoading] =
+  const [ShowEmployeeData, ShowEmployeeLoading,EmployeeEndPoint, holidaysData, holidaysLoading] =
     useSelector((state: RootState) => [
-      state.authSlice.profileData,
+      state.employeeSlice.ShowEmployeeData,
+      state.employeeSlice.ShowEmployeeLoading,
+      state.employeeSlice.EmployeeEndPoint,
+
       state.authSlice.holidaysData,
-      state.authSlice.profileLoading,
       state.authSlice.holidaysLoading,
     ]);
 
@@ -384,18 +388,40 @@ export default function Profile({route, navigation}: CommonProps) {
     onboardingDate: '',
     nationality: '',
   });
-  const details = profileData?.employee;
+
+
+
+  const endUrl = EmployeeEndPoint;
 
   useEffect(() => {
-    if (!isNull(profileData)) {
-      const data = profileData?.employee;
+    const focusLister = navigation.addListener('focus', () => {
+      setRefreshMe(true);
+    });
 
+    return focusLister;
+  }, []);
+
+  useEffect(() => {
+    if (refreshMe) {
+      setRefreshMe(false);
+      dispatch(
+        fetchEmployeeShow({
+          endPoint: `${urlEndPoint.employee}/${endUrl}`,
+        }),
+      );
+    }
+  }, [refreshMe]);
+
+
+  useEffect(() => {
+    if (!isNull(ShowEmployeeData)) {
+      const data = ShowEmployeeData?.employee;
+      
       setFormData({
         ...formData,
         first_name: data?.first_name,
         middle_name: data?.middle_name,
-        name:
-          data?.first_name + ' ' + data?.middle_name + ' ' + data?.last_name,
+        name:[ data?.first_name , data?.middle_name, data?.last_name].join(' '),
         companyEmail: data?.email,
         gender: data?.gender,
         joiningDate: data?.joining_date,
@@ -403,19 +429,23 @@ export default function Profile({route, navigation}: CommonProps) {
         nationality: data?.nationality,
       });
     }
-  }, [profileData]);
+  }, [ShowEmployeeData]);
+
+
+
 
   useEffect(() => {
     if (!isNull(route?.params?.title == strings.holidays)) {
-      dispatch(fetchHolidays({endPoint: urlEndPoint.holidays}));
+      dispatch(fetchHolidays({ endPoint: urlEndPoint.holidays }));
     }
   }, [route]);
 
+
   const onRefresh = () => {
     if (!isNull(route?.params?.title == strings.holidays)) {
-      dispatch(fetchHolidays({endPoint: urlEndPoint.holidays}));
+      dispatch(fetchHolidays({ endPoint: urlEndPoint.holidays }));
     } else {
-      dispatch(fetchProfile({endPoint: urlEndPoint.profile}));
+      dispatch(fetchProfile({ endPoint: urlEndPoint.profile }));
     }
   };
 
@@ -432,7 +462,7 @@ export default function Profile({route, navigation}: CommonProps) {
         refreshControl={
           <RefreshControl
             enabled={true}
-            refreshing={profileLoading || holidaysLoading}
+            refreshing={ShowEmployeeLoading || holidaysLoading}
             onRefresh={onRefresh}
             colors={[Colors.primary]}
             tintColor={Colors.primary}
@@ -443,8 +473,8 @@ export default function Profile({route, navigation}: CommonProps) {
         ) : null}
 
         {route?.params?.title == strings.heads ? (
-          !isNull(details?.employee_heads) ? (
-            <HeadsSection formData={details?.employee_heads} />
+          !isNull(ShowEmployeeData?.employee_heads) ? (
+            <HeadsSection formData={ShowEmployeeData?.employee_heads} />
           ) : (
             <EmptyState
               title={strings.noDataFound}
@@ -454,8 +484,8 @@ export default function Profile({route, navigation}: CommonProps) {
         ) : null}
 
         {route?.params?.title == strings.designations ? (
-          !isNull(details?.employee_designations) ? (
-            <DesignationsSection formData={details?.employee_designations} />
+          !isNull(ShowEmployeeData?.employee_designations) ? (
+            <DesignationsSection formData={ShowEmployeeData?.employee_designations} />
           ) : (
             <EmptyState
               title={strings.noDataFound}
@@ -465,8 +495,8 @@ export default function Profile({route, navigation}: CommonProps) {
         ) : null}
 
         {route?.params?.title == strings.departments ? (
-          !isNull(details?.employee_departments) ? (
-            <DepartmentSection formData={details?.employee_departments} />
+          !isNull(ShowEmployeeData?.employee_departments) ? (
+            <DepartmentSection formData={ShowEmployeeData?.employee_departments} />
           ) : (
             <EmptyState
               title={strings.noDataFound}
@@ -476,8 +506,8 @@ export default function Profile({route, navigation}: CommonProps) {
         ) : null}
 
         {route?.params?.title == strings.educations ? (
-          !isNull(details?.employee_educations) ? (
-            <EducationSection formData={details?.employee_educations} />
+          !isNull(ShowEmployeeData?.employee_educations) ? (
+            <EducationSection formData={ShowEmployeeData?.employee_educations} />
           ) : (
             <EmptyState
               title={strings.noDataFound}
@@ -487,8 +517,8 @@ export default function Profile({route, navigation}: CommonProps) {
         ) : null}
 
         {route?.params?.title == strings.experiences ? (
-          !isNull(details?.employee_experiences) ? (
-            <ExperienceSection formData={details?.employee_experiences} />
+          !isNull(ShowEmployeeData?.employee_experiences) ? (
+            <ExperienceSection formData={ShowEmployeeData?.employee_experiences} />
           ) : (
             <EmptyState
               title={strings.noDataFound}
@@ -552,6 +582,6 @@ const styles = StyleSheet.create({
     ...typography._16SofticesSemibold,
     color: Colors.textCl,
   },
-  width38: {width: '38%'},
-  width63: {width: '63%', marginLeft: ms(5)},
+  width38: { width: '38%' },
+  width63: { width: '63%', marginLeft: ms(5) },
 });

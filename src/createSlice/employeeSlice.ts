@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   fetchEmployee,
   fetchEmployeeCreate,
@@ -28,6 +28,8 @@ interface AppState {
 
   EmployeeSearchData: any;
   EmployeeSearchLoading: boolean;
+
+  EmployeeEndPoint: any
 }
 
 const initialState: AppState = {
@@ -50,6 +52,11 @@ const initialState: AppState = {
 
   EmployeeSearchData: null,
   EmployeeSearchLoading: false,
+
+  EmployeeEndPoint: null
+
+
+
 };
 
 // Reusable helper functions
@@ -60,17 +67,17 @@ const handlePending = (loadingKey: keyof AppState) => (state: AppState) => {
 
 const handleFulfilled =
   (dataKey: keyof AppState, loadingKey: keyof AppState) =>
-  (state: AppState, action: PayloadAction<any>) => {
-    state[loadingKey] = false;
-    state[dataKey] = action.payload;
-  };
+    (state: AppState, action: PayloadAction<any>) => {
+      state[loadingKey] = false;
+      state[dataKey] = action.payload;
+    };
 
 const handleRejected =
   (loadingKey: keyof AppState) =>
-  (state: AppState, action: PayloadAction<any>) => {
-    state[loadingKey] = false;
-    state.error = action.payload;
-  };
+    (state: AppState, action: PayloadAction<any>) => {
+      state[loadingKey] = false;
+      state.error = action.payload;
+    };
 
 const EmployeeSlice = createSlice({
   name: 'Employee',
@@ -93,6 +100,9 @@ const EmployeeSlice = createSlice({
     },
     setEmployeeSearchData(state, action: PayloadAction<any>) {
       state.EmployeeSearchData = action.payload;
+    },
+    setEmployeeEndPoint(state, action: PayloadAction<any>) {
+      state.EmployeeEndPoint = action.payload;
     },
   },
   extraReducers: builder => {
@@ -154,6 +164,7 @@ export const {
   setDeleteEmployeeData,
   setShowEmployeeData,
   setEmployeeSearchData,
+  setEmployeeEndPoint
 } = EmployeeSlice.actions;
 
 export default EmployeeSlice.reducer;

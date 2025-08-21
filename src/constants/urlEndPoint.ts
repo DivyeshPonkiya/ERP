@@ -25,4 +25,8 @@ export const urlEndPoint = {
 
   reports: 'reports',
   stocks: 'stocks',
+
+
+  employee: 'employees',
+
 };

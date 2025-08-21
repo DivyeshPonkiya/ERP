@@ -49,6 +49,7 @@ import ToastMessage from '../components/ToastMessage';
 import {CommonProps} from '../screens/types';
 import SelectDropdown from '../components/SelectDropdown/SelectDropdown';
 import InputField from '../components/InputField';
+import { setEmployeeEndPoint } from '../createSlice/employeeSlice';
 
 interface MenuSubItem {
   id?: any;
@@ -170,12 +171,12 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
       redirect: NAVIGATION.Profile,
       isExpandable: true,
       subItems: [
-      {id:1,label: strings.basicDetails, redirect: NAVIGATION.Profile},
-      {id:2,label: strings.heads, redirect: NAVIGATION.Profile},
-      {id:3,label: strings.designations, redirect: NAVIGATION.Profile},
-      {id:4,label: strings.departments, redirect: NAVIGATION.Profile},
-      {id:5,label: strings.educations, redirect: NAVIGATION.Profile},
-      {id:6,label: strings.experiences, redirect: NAVIGATION.Profile},
+      {id:'profile',label: strings.basicDetails, redirect: NAVIGATION.Profile},
+      {id:'employee-heads',label: strings.heads, redirect: NAVIGATION.Profile},
+      {id:'employee-designations',label: strings.designations, redirect: NAVIGATION.Profile},
+      {id:'employee-departments',label: strings.departments, redirect: NAVIGATION.Profile},
+      {id:'employee-educations',label: strings.educations, redirect: NAVIGATION.Profile},
+      {id:'employee-experiences',label: strings.experiences, redirect: NAVIGATION.Profile},
       ],
     },
       {label: strings.holidays, redirect: NAVIGATION.Profile},
@@ -383,7 +384,7 @@ const DrawerItem = ({data, redirect, label, isSub = false}: any) => {
       ]);
     } else {
       navigate(redirect, {title: label}, redirect == NAVIGATION.Profile);
-      dispatch(setEndUrl(data));
+      dispatch(setEmployeeEndPoint(data?.id));
     }
   };
 
