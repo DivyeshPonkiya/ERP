@@ -179,7 +179,7 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
       ],
     },
       {label: strings.holidays, redirect: NAVIGATION.Profile},
-      {label: strings.leaves, redirect: NAVIGATION.LeavesScreen},
+      {label: strings.leaves, redirect: NAVIGATION.Leaves},
       {label: strings.logout, redirect: 'power'},
 
     ];

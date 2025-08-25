@@ -55,7 +55,7 @@ const DrawerNavigator = () => {
       <Drawer.Screen name={NAVIGATION.Profile} component={Profile} />
       <Drawer.Screen name={NAVIGATION.EditProfile} component={EditProfile} />
 
-      <Drawer.Screen name={NAVIGATION.LeavesScreen} component={LeavesNavigator} />
+      <Drawer.Screen name={NAVIGATION.Leaves} component={LeavesNavigator} />
 
 
       <Drawer.Screen

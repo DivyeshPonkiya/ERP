@@ -37,6 +37,7 @@ import {
   fetchLeaves,
   fetchLeavesCreate,
   fetchLeavesEdit,
+  fetchLeavesSearch,
 } from '../../../createAsyncThunk/leavesThunk';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -49,6 +50,11 @@ import _ from 'lodash';
 import {ParamsProps} from '../../types';
 import moment from 'moment';
 
+const timeUnitType = [
+  {id: '0', name: 'First half'},
+  {id: '2', name: 'Second half'},
+];
+
 export default function AddLeaves({navigation, route}: any) {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -57,6 +63,9 @@ export default function AddLeaves({navigation, route}: any) {
     AddLeavesLoading,
     EditLeavesData,
     EditLeavesLoading,
+
+    LeavesSearchData,
+    LeavesSearchLoading,
     error,
   ] = useSelector((state: RootState) => [
     state.leavesSlice.AddLeavesData,
@@ -65,10 +74,13 @@ export default function AddLeaves({navigation, route}: any) {
     state.leavesSlice.EditLeavesData,
     state.leavesSlice.EditLeavesLoading,
 
+    state.leavesSlice.LeavesSearchData,
+    state.leavesSlice.LeavesSearchLoading,
+
     state.leavesSlice.error,
   ]);
 
-    const [formDataRequired, setFormDataRequired] = useState({
+  const [formDataRequired, setFormDataRequired] = useState({
     date: '',
     leave_type: {name: '', id: ''},
     description: '',
@@ -76,6 +88,7 @@ export default function AddLeaves({navigation, route}: any) {
 
   const [formData, setFormData] = useState({
     half_day: false,
+    half_day_period: {name: '', id: ''},
   });
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -94,9 +107,9 @@ export default function AddLeaves({navigation, route}: any) {
         leave_type: {name: _.capitalize(routeParams?.time_unit), id: ''},
         description: routeParams?.description,
       });
-        setFormData({
+      setFormData({
         half_day: routeParams?.half_day,
-       
+        half_day_period: {name: '', id: ''},
       });
     }
   }, [routeParams]);
@@ -109,7 +122,7 @@ export default function AddLeaves({navigation, route}: any) {
       );
       dispatch(
         fetchLeaves({
-          endPoint: urlEndPoint.works,
+          endPoint: urlEndPoint.employeeLeaves,
         }),
       );
 
@@ -124,6 +137,7 @@ export default function AddLeaves({navigation, route}: any) {
 
       setFormData({
         half_day: false,
+        half_day_period: {name: '', id: ''},
       });
 
       navigation.goBack();
@@ -135,29 +149,49 @@ export default function AddLeaves({navigation, route}: any) {
     setFormErrors(errors);
     if (Object.keys(errors).length === 0) {
       const params: ParamsProps = {
-        // 'work[name]': formData.name,
-        // 'work[time_to_finish]': formData.time_to_finish,
-        // 'work[time_unit]': formData.time_unit.name,
-        // 'work[last_step]': formData.last_step ? 1 : 0,
-        // 'work[active]': formData.active ? 1 : 0,
-        'work[description]': formDataRequired.description,
+        'leave[leave_type_id]': formDataRequired.leave_type.id,
+        'leave[date]': formDataRequired.date,
+        'leave[half_day]': formData.half_day,
+        'leave[details]': formDataRequired.description,
+        'leave[half_day_period]':formData.half_day ? formData.half_day_period.name :'',
+
       };
       if (routeParams) {
         dispatch(
           fetchLeavesEdit({
             params: params,
-            endPoint: urlEndPoint.works + `/${routeParams?.id}`,
+            endPoint: urlEndPoint.employeeLeaves + `/${routeParams?.id}`,
           }),
         );
       } else {
         dispatch(
           fetchLeavesCreate({
             params: params,
-            endPoint: urlEndPoint.works,
+            endPoint: urlEndPoint.employeeLeaves,
           }),
         );
       }
     }
+  };
+
+  const loadTypes = (search: any) => {
+    const rawParams = {
+      search: search,
+    };
+    const params = Object.entries(rawParams).reduce((acc, [key, value]) => {
+      if (value !== '' && value !== undefined && value !== null) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as Record<string, any>);
+    console.log(rawParams, 'loadTypes');
+
+    dispatch(
+      fetchLeavesSearch({
+        params: params,
+        endPoint: urlEndPoint.leaveTypes,
+      }),
+    );
   };
 
   return (
@@ -170,15 +204,15 @@ export default function AddLeaves({navigation, route}: any) {
 
       <ScrollView contentContainerStyle={styles.container}>
         <SelectDropdown
-          data={[]}
+          data={LeavesSearchData?.leave_types}
           disableAutoScroll={false}
           search={true}
           onChangeSearchInputText={(text: any) => {
-            // Call API with debounce logic in useEffect
             setFormDataRequired(prev => ({
               ...prev,
-              leave_type: {...prev.leave_type, name: text, id: '', unit: ''},
+              leave_type: {...prev.leave_type, name: text, id: ''},
             }));
+            loadTypes(text);
           }}
           selectedRowTextStyle={{
             color: Colors.textCl,
@@ -188,7 +222,6 @@ export default function AddLeaves({navigation, route}: any) {
             color: Colors.textCl,
             ...typography._14SofticesRegular,
           }}
-          dropdownStyle={{marginTop: ms(-15)}}
           buttonTextAfterSelection={(selectedItem: any, index: any) => {
             return selectedItem?.name;
           }}
@@ -199,11 +232,11 @@ export default function AddLeaves({navigation, route}: any) {
           searchPlaceHolder={strings.search}
           renderCustomizedButtonChild={(selectedItem: any) => (
             <InputField
-              value={formDataRequired?.leave_type?.name}
+              value={_.capitalize(formDataRequired?.leave_type?.name)}
               onChangeText={val => {
                 setFormDataRequired(prev => ({
                   ...prev,
-                  product: {...prev?.leave_type, name: val, id: '', unit: ''},
+                  leave_type: {...prev?.leave_type, name: val, id: ''},
                 }));
               }}
               labelTxt={strings.leaveType}
@@ -220,7 +253,6 @@ export default function AddLeaves({navigation, route}: any) {
                 id: item.id,
               },
             }));
-            // loadProduction(item.id);
           }}
           errorMessage={formErrors?.leave_type?.name}
           validationStatus={formErrors?.leave_type?.name ? 'error' : 'default'}
@@ -235,7 +267,9 @@ export default function AddLeaves({navigation, route}: any) {
                 ? moment(formDataRequired.date).format('DD - MM - YYYY')
                 : strings.dateFormate
             }
-            onChangeText={val => setFormDataRequired({...formDataRequired, date: val})}
+            onChangeText={val => {
+              setFormDataRequired({...formDataRequired, date: val});
+            }}
             labelTxt={strings.date}
             placeholder={strings.select}
             editable={false}
@@ -257,6 +291,7 @@ export default function AddLeaves({navigation, route}: any) {
             value={new Date()}
             mode="date"
             display={Platform.OS === 'ios' ? 'inline' : 'default'}
+            minimumDate={new Date()}
             onChange={(_, selectedDate: any) => {
               if (selectedDate)
                 setFormDataRequired({
@@ -283,9 +318,71 @@ export default function AddLeaves({navigation, route}: any) {
           />
         </View>
 
+        {formData.half_day ? (
+          <SelectDropdown
+            data={timeUnitType}
+            disabled={isNull(timeUnitType)}
+            buttonStyle={[styles.inputStyleAcc]}
+            onSelect={(selectedItem: any, index: any) => {
+              setFormData({
+                ...formData,
+                half_day_period: {
+                  name: selectedItem?.name,
+                  id: selectedItem?.id,
+                },
+              });
+            }}
+            selectedRowTextStyle={{
+              color: Colors.textCl,
+              ...typography._14SofticesSemibold,
+            }}
+            rowTextStyle={{
+              color: Colors.textCl,
+              ...typography._14SofticesRegular,
+            }}
+            buttonTextAfterSelection={(selectedItem: any, index: any) => {
+              return selectedItem?.name;
+            }}
+            rowTextForSelection={(item: any, index: any) => {
+              return CFL(item?.name);
+            }}
+            renderCustomizedButtonChild={(selectedItem: any) => {
+              return (
+                <InputField
+                  value={formData?.half_day_period?.name}
+                  onChangeText={(val: any) =>
+                    setFormData({...formData, half_day_period: val})
+                  }
+                  editable={false}
+                  labelTxt={strings.halfDayPeriod}
+                  placeholder={strings.select}
+                  rightIcon={
+                    <View style={styles.pcsView}>
+                      <DropDownSvg
+                        height={22}
+                        width={22}
+                        color={Colors.textLight}
+                      />
+                    </View>
+                  }
+                  requiredField={
+                    formData?.half_day
+                      ? formData.half_day_period.name === 'Select'
+                        ? true
+                        : false
+                      : false
+                  }
+                />
+              );
+            }}
+          />
+        ) : null}
+
         <InputField
           value={formDataRequired.description}
-          onChangeText={val => setFormDataRequired({...formDataRequired, description: val})}
+          onChangeText={val =>
+            setFormDataRequired({...formDataRequired, description: val})
+          }
           labelTxt={strings.details}
           placeholder={strings.writeDetails}
           multiline={true}
@@ -366,7 +463,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cardBg,
     borderRadius: ms(10),
     height: ms(42),
-    minWidth: ms(93),
     paddingHorizontal: ms(10),
     alignItems: 'center',
     justifyContent: 'space-between',

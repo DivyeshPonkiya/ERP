@@ -252,6 +252,9 @@ export const en = {
   writeDetails: 'Write Details',
 
   halfDay: 'Half Day',
+  halfDayPeriod: 'Half Day Period',
+
+  noLeaveTypeFound:'No leave type found',
 
   na: 'NA',
 };

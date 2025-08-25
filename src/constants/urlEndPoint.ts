@@ -20,7 +20,8 @@ export const urlEndPoint = {
   sales: 'sales',
   dashboard: 'dashboard',
 
-  works: 'works',
+  employeeLeaves: 'employees/leaves',
+
   autocompleteWorks: 'autocomplete/works',
 
   reports: 'reports',

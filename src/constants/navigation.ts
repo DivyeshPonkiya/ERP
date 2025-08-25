@@ -13,7 +13,9 @@ export const NAVIGATION = {
   Drawer: 'Drawer',
   Dashboard: 'Dashboard',
 
-  LeavesScreen: 'LeavesWorks',
+
+  Leaves: 'Leaves',
+  LeavesScreen: 'LeavesScreen',
   AddLeaves: 'AddLeaves',
   LeavesDetail: 'LeavesDetail',
 };
