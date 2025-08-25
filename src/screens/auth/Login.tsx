@@ -72,7 +72,7 @@ const Login = ({navigation}: CommonProps) => {
   );
 
   const [formData, setFormData] = useState({
-    email: __DEV__ ? 'edison@marks.example' : '',
+    email: __DEV__ ? 'raj.vasoya@softices.in' : '',
     password: __DEV__ ? 'password' : '',
   });
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});

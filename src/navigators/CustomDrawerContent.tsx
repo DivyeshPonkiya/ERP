@@ -170,16 +170,16 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
       redirect: NAVIGATION.Profile,
       isExpandable: true,
       subItems: [
-      {id:'profile',label: strings.basicDetails, redirect: NAVIGATION.Profile},
-      {id:'employee-heads',label: strings.heads, redirect: NAVIGATION.Profile},
-      {id:'employee-designations',label: strings.designations, redirect: NAVIGATION.Profile},
-      {id:'employee-departments',label: strings.departments, redirect: NAVIGATION.Profile},
-      {id:'employee-educations',label: strings.educations, redirect: NAVIGATION.Profile},
-      {id:'employee-experiences',label: strings.experiences, redirect: NAVIGATION.Profile},
+      {id:urlEndPoint.employeeProfile,label: strings.basicDetails, redirect: NAVIGATION.Profile},
+      {id:urlEndPoint.employeeHeads,label: strings.heads, redirect: NAVIGATION.Profile},
+      {id:urlEndPoint.employeeDesignations,label: strings.designations, redirect: NAVIGATION.Profile},
+      {id:urlEndPoint.employeeDepartments,label: strings.departments, redirect: NAVIGATION.Profile},
+      {id:urlEndPoint.employeeEducations,label: strings.educations, redirect: NAVIGATION.Profile},
+      {id:urlEndPoint.employeeExperiences,label: strings.experiences, redirect: NAVIGATION.Profile},
       ],
     },
       {label: strings.holidays, redirect: NAVIGATION.Profile},
-      {label: strings.leaves, redirect: NAVIGATION.Profile},
+      {label: strings.leaves, redirect: NAVIGATION.LeavesScreen},
       {label: strings.logout, redirect: 'power'},
 
     ];

@@ -110,8 +110,7 @@ export const en = {
   status: 'Status',
   completedDate: 'Completed Date',
   startedDate: 'Started Date',
-  addWork: 'Add Work',
-  works: 'Works',
+
   phone: 'Phone',
   finishedAt: 'Finished at',
   update: 'Update',
@@ -247,6 +246,12 @@ export const en = {
   revoke_date: 'Revoke date',
   holidays: 'Holidays',
   leaves: 'Leaves',
+  addLeave: 'Add Leave',
+  leaveType: 'Leave Type',
+  details: 'Details',
+  writeDetails: 'Write Details',
+
+  halfDay: 'Half Day',
 
   na: 'NA',
 };

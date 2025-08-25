@@ -39,7 +39,7 @@ import {setDeleteLeavesData} from '../../../createSlice/leavesSlice';
 import ToastMessage from '../../../components/ToastMessage';
 import _ from 'lodash';
 
-const WorksScreen = () => {
+const LeavesScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const lastStepType = [
@@ -72,10 +72,11 @@ const WorksScreen = () => {
 
   const [visible, setVisible] = useState(false);
   const [period, setPeriod] = useState(new Date());
-  const [worksList, setWorksList] = useState<any>(null);
+  const [leavesList, setLeaveList] = useState<any>(null);
 
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>({id: 0});
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [searchFiled, setSearchFiled] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -87,12 +88,12 @@ const WorksScreen = () => {
   });
 
   useEffect(() => {
-    dispatch(
-      fetchLeaves({
-        params: '',
-        endPoint: urlEndPoint.works,
-      }),
-    );
+    // dispatch(
+    //   fetchLeaves({
+    //     params: '',
+    //     endPoint: urlEndPoint.works,
+    //   }),
+    // );
   });
 
   useEffect(() => {
@@ -100,14 +101,14 @@ const WorksScreen = () => {
       setFooterLoading(false);
       setRefreshing(false);
       setApplyFilter(false);
-      setWorksList([]);
+      setLeaveList([]);
     }
   }, [error]);
 
   useEffect(() => {
     if (!isNull(LeavesListData)) {
       const workList = LeavesListData?.works || [];
-      setWorksList((prev: any = []) => {
+      setLeaveList((prev: any = []) => {
         if (LeavesListData?.pagy?.current_page === 1) {
           return workList;
         } else if (LeavesListData?.pagy?.current_page > 1) {
@@ -130,8 +131,8 @@ const WorksScreen = () => {
       setDeleteModal(false);
       setSelectedItem(null);
       const updatedList =
-        worksList?.filter((item: any) => item.id !== selectedItem?.id) || [];
-      setWorksList(updatedList);
+        leavesList?.filter((item: any) => item.id !== selectedItem?.id) || [];
+      setLeaveList(updatedList);
     }
   }, [DeleteLeavesData]);
 
@@ -144,12 +145,12 @@ const WorksScreen = () => {
       };
       const params = keyValueEmptyFilter(rawParams);
       if (!isNull(searchFiled)) {
-        dispatch(
-          fetchLeaves({
-            params: params,
-            endPoint: urlEndPoint.works,
-          }),
-        );
+        // dispatch(
+        //   fetchLeaves({
+        //     params: params,
+        //     endPoint: urlEndPoint.works,
+        //   }),
+        // );
       }
     }, 500); // Adjust the debounce delay as needed
 
@@ -166,12 +167,12 @@ const WorksScreen = () => {
 
       const params = keyValueEmptyFilter(rawParams);
 
-      dispatch(
-        fetchLeaves({
-          params: params,
-          endPoint: urlEndPoint.works,
-        }),
-      );
+      // dispatch(
+      //   fetchLeaves({
+      //     params: params,
+      //     endPoint: urlEndPoint.works,
+      //   }),
+      // );
     }
   }, [applyFilter]);
 
@@ -190,12 +191,12 @@ const WorksScreen = () => {
 
       const params = keyValueEmptyFilter(rawParams);
 
-      dispatch(
-        fetchLeaves({
-          params: params,
-          endPoint: urlEndPoint.works,
-        }),
-      );
+      // dispatch(
+      //   fetchLeaves({
+      //     params: params,
+      //     endPoint: urlEndPoint.works,
+      //   }),
+      // );
       setFooterLoading(true);
     }
   };
@@ -381,15 +382,15 @@ const WorksScreen = () => {
 
   return (
     <SafeAreaWrapper
-      isLoading={worksList == null ? true : false}
+      isLoading={leavesList == null ? false : false}
       statusBg={Colors.primary}
       style={styles.container}
       barStyle="light-content">
       <ActionBar
-        title={strings.works}
+        title={strings.leaves}
         LeftIcon={<BackSvg width={28} height={28} color={Colors.white} />}
         onLeftPress={() => goBack()}
-        onRightPress={() => navigate(NAVIGATION.AddWorks)}
+        onRightPress={() => navigate(NAVIGATION.AddLeaves)}
       />
 
       <SearchHeader
@@ -402,7 +403,7 @@ const WorksScreen = () => {
       />
 
       <FlatList
-        data={worksList || []}
+        data={leavesList || []}
         showsVerticalScrollIndicator={false}
         bounces={true}
         onEndReached={() => {
@@ -425,7 +426,7 @@ const WorksScreen = () => {
         renderItem={({item}) => (
           <WorksItem
             item={item}
-            onPress={() => navigate(NAVIGATION.WorksDetail, {workData: item})}
+            onPress={() => navigate(NAVIGATION.LeavesDetail, {workData: item})}
             deleteModal={() => {
               setDeleteModal(true), setSelectedItem(item);
             }}
@@ -495,4 +496,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WorksScreen;
+export default LeavesScreen;

@@ -1,15 +1,24 @@
 // EditProfile.tsx
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ScrollView, View, Text, Switch} from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  Switch,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 
 import ActionBar from '../../../components/ActionBar';
-import {BackSvg, DropDownSvg} from '../../../assets/Images/svg';
+import {BackSvg, CalendarSvg, DropDownSvg} from '../../../assets/Images/svg';
 import {ms} from '../../../theme/spacing';
 import {typography} from '../../../theme/typography';
 import {Colors} from '../../../theme/variables';
 import InputField from '../../../components/InputField';
 import {strings} from '../../../localization';
 import {
+  ACTIVE_OPACITY,
   CFL,
   hexToRGBA,
   isNull,
@@ -25,51 +34,52 @@ import {RootState} from '../../../store/store';
 import {urlEndPoint} from '../../../constants/urlEndPoint';
 import ToastMessage from '../../../components/ToastMessage';
 import {
-  fetchWork,
-  fetchWorkCreate,
-  fetchWorkEdit,
-} from '../../../createAsyncThunk/employeeThunk';
+  fetchLeaves,
+  fetchLeavesCreate,
+  fetchLeavesEdit,
+} from '../../../createAsyncThunk/leavesThunk';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {AppDispatch} from '../../../store/store';
-import {setAddWorkData, setEditWorkData} from '../../../createSlice/employeeSlice';
+import {
+  setAddLeavesData,
+  setEditLeavesData,
+} from '../../../createSlice/leavesSlice';
 import _ from 'lodash';
 import {ParamsProps} from '../../types';
+import moment from 'moment';
 
-export default function AddWork({navigation, route}: any) {
+export default function AddLeaves({navigation, route}: any) {
   const dispatch = useDispatch<AppDispatch>();
 
-  const timeUnitType = [
-    {id: 'select', name: 'Select'},
-    {id: 'minute', name: 'Minute'},
-    {id: 'hour', name: 'Hour'},
-    {id: 'day', name: 'Day'},
-    {id: 'week', name: 'Week'},
-    {id: 'month', name: 'Month'},
-    {id: 'year', name: 'Year'},
-  ];
+  const [
+    AddLeavesData,
+    AddLeavesLoading,
+    EditLeavesData,
+    EditLeavesLoading,
+    error,
+  ] = useSelector((state: RootState) => [
+    state.leavesSlice.AddLeavesData,
+    state.leavesSlice.AddLeavesLoading,
 
-  const [AddWorkData, AddWorkLoading, EditWorkData, EditWorkLoading, error] =
-    useSelector((state: RootState) => [
-      state.worksSlice.AddWorkData,
-      state.worksSlice.AddWorkLoading,
+    state.leavesSlice.EditLeavesData,
+    state.leavesSlice.EditLeavesLoading,
 
-      state.worksSlice.EditWorkData,
-      state.worksSlice.EditWorkLoading,
+    state.leavesSlice.error,
+  ]);
 
-      state.worksSlice.error,
-    ]);
-
-  const [requireFormData, setRequireFormData] = useState({
-    name: '',
-  });
-  const [formData, setFormData] = useState({
-    active: false,
-    last_step: false,
-    time_to_finish: '',
-    time_unit: {name: '', id: ''},
+    const [formDataRequired, setFormDataRequired] = useState({
+    date: '',
+    leave_type: {name: '', id: ''},
     description: '',
   });
+
+  const [formData, setFormData] = useState({
+    half_day: false,
+  });
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
   const routeParams = route?.params?.workData;
 
   useEffect(() => {
@@ -79,78 +89,69 @@ export default function AddWork({navigation, route}: any) {
 
   useEffect(() => {
     if (!isNull(routeParams)) {
-      setRequireFormData({
-        name: routeParams?.name,
-      });
-      setFormData({
-        active: routeParams?.active,
-        last_step: routeParams?.last_step,
-        time_to_finish: routeParams?.time_to_finish,
-        time_unit: {name: _.capitalize(routeParams?.time_unit), id: ''},
+      setFormDataRequired({
+        date: routeParams?.date,
+        leave_type: {name: _.capitalize(routeParams?.time_unit), id: ''},
         description: routeParams?.description,
+      });
+        setFormData({
+        half_day: routeParams?.half_day,
+       
       });
     }
   }, [routeParams]);
 
   useEffect(() => {
-    if (!isNull(AddWorkData) || !isNull(EditWorkData)) {
+    if (!isNull(AddLeavesData) || !isNull(EditLeavesData)) {
       ToastMessage.set(
         toastConst.errorToast,
-        AddWorkData?.message || EditWorkData?.message,
+        AddLeavesData?.message || EditLeavesData?.message,
       );
       dispatch(
-        fetchWork({
+        fetchLeaves({
           endPoint: urlEndPoint.works,
         }),
       );
 
-      dispatch(setAddWorkData(null));
-      dispatch(setEditWorkData(null));
+      dispatch(setAddLeavesData(null));
+      dispatch(setEditLeavesData(null));
 
-      setRequireFormData({
-        name: '',
-      });
-      setFormData({
-        active: false,
-        last_step: false,
-        time_to_finish: '',
-        time_unit: {name: '', id: ''},
+      setFormDataRequired({
+        date: '',
+        leave_type: {name: '', id: ''},
         description: '',
+      });
+
+      setFormData({
+        half_day: false,
       });
 
       navigation.goBack();
     }
-  }, [AddWorkData, EditWorkData]);
+  }, [AddLeavesData, EditLeavesData]);
 
   const handleEdit = () => {
-    const requireForm: any = requireFormData;
-
-    if (formData.time_to_finish && formData.time_unit.name === 'Select') {
-      requireForm.time_to_finish = '';
-    }
-
-    const errors = validateForm(requireForm);
-
+    const errors = validateForm(formDataRequired);
     setFormErrors(errors);
     if (Object.keys(errors).length === 0) {
       const params: ParamsProps = {
-        'work[name]': requireFormData.name,
-        'work[time_to_finish]': formData.time_to_finish,
-        'work[time_unit]': formData.time_unit.name,
-        'work[last_step]': formData.last_step ? 1 : 0,
-        'work[active]': formData.active ? 1 : 0,
-        'work[description]': formData.description,
+        // 'work[name]': formData.name,
+        // 'work[time_to_finish]': formData.time_to_finish,
+        // 'work[time_unit]': formData.time_unit.name,
+        // 'work[last_step]': formData.last_step ? 1 : 0,
+        // 'work[active]': formData.active ? 1 : 0,
+        'work[description]': formDataRequired.description,
       };
       if (routeParams) {
         dispatch(
-          fetchWorkEdit({
+          fetchLeavesEdit({
             params: params,
             endPoint: urlEndPoint.works + `/${routeParams?.id}`,
           }),
         );
       } else {
         dispatch(
-          fetchWorkCreate({
+          fetchLeavesCreate({
             params: params,
             endPoint: urlEndPoint.works,
           }),
@@ -162,33 +163,22 @@ export default function AddWork({navigation, route}: any) {
   return (
     <SafeAreaWrapper statusBg={Colors.primary} barStyle="light-content">
       <ActionBar
-        title={strings.addWork}
+        title={strings.addLeave}
         LeftIcon={<BackSvg width={28} height={28} color={Colors.white} />}
         onLeftPress={() => goBack()}
       />
 
       <ScrollView contentContainerStyle={styles.container}>
-        <InputField
-          value={requireFormData.name}
-          onChangeText={val =>
-            setRequireFormData({...requireFormData, name: val})
-          }
-          labelTxt={strings.name}
-          errorMessage={formErrors.name}
-          validationStatus={formErrors.name ? 'error' : 'default'}
-          placeholder={strings.enterName}
-          requiredField={true}
-        />
-
         <SelectDropdown
-          data={timeUnitType}
-          disabled={isNull(timeUnitType)}
-          buttonStyle={[styles.inputStyleAcc]}
-          onSelect={(selectedItem: any, index: any) => {
-            setFormData({
-              ...formData,
-              time_unit: {name: selectedItem?.name, id: selectedItem?.id},
-            });
+          data={[]}
+          disableAutoScroll={false}
+          search={true}
+          onChangeSearchInputText={(text: any) => {
+            // Call API with debounce logic in useEffect
+            setFormDataRequired(prev => ({
+              ...prev,
+              leave_type: {...prev.leave_type, name: text, id: '', unit: ''},
+            }));
           }}
           selectedRowTextStyle={{
             color: Colors.textCl,
@@ -198,85 +188,111 @@ export default function AddWork({navigation, route}: any) {
             color: Colors.textCl,
             ...typography._14SofticesRegular,
           }}
+          dropdownStyle={{marginTop: ms(-15)}}
           buttonTextAfterSelection={(selectedItem: any, index: any) => {
             return selectedItem?.name;
           }}
           rowTextForSelection={(item: any, index: any) => {
             return CFL(item?.name);
           }}
-          renderCustomizedButtonChild={(selectedItem: any) => {
-            return (
-              <InputField
-                value={
-                  formData?.time_to_finish ? `${formData?.time_to_finish}` : ''
-                }
-                onChangeText={(val: any) =>
-                  setFormData({...formData, time_to_finish: val})
-                }
-                inputKeyboardType="number-pad"
-                labelTxt={strings.timeToFinish}
-                placeholder={strings.timeToFinish}
-                rightIcon={
-                  <View style={styles.pcsView}>
-                    <Text style={styles.pcsText}>
-                      {formData?.time_unit.name
-                        ? formData?.time_unit.name
-                        : strings.select}
-                    </Text>
-                    <DropDownSvg
-                      height={22}
-                      width={22}
-                      color={Colors.textLight}
-                    />
-                  </View>
-                }
-                requiredField={
-                  formData?.time_to_finish
-                    ? formData.time_unit.name === 'Select'
-                      ? true
-                      : false
-                    : false
-                }
-              />
-            );
+          buttonStyle={[styles.inputStyleAcc]}
+          searchPlaceHolder={strings.search}
+          renderCustomizedButtonChild={(selectedItem: any) => (
+            <InputField
+              value={formDataRequired?.leave_type?.name}
+              onChangeText={val => {
+                setFormDataRequired(prev => ({
+                  ...prev,
+                  product: {...prev?.leave_type, name: val, id: '', unit: ''},
+                }));
+              }}
+              labelTxt={strings.leaveType}
+              placeholder={strings.search}
+              requiredField={true}
+              editable={false}
+            />
+          )}
+          onSelect={(item: any, index: any) => {
+            setFormDataRequired(prev => ({
+              ...prev,
+              leave_type: {
+                name: item.name,
+                id: item.id,
+              },
+            }));
+            // loadProduction(item.id);
           }}
+          errorMessage={formErrors?.leave_type?.name}
+          validationStatus={formErrors?.leave_type?.name ? 'error' : 'default'}
         />
 
+        <TouchableOpacity
+          activeOpacity={ACTIVE_OPACITY}
+          onPress={() => setShowDatePicker(true)}>
+          <InputField
+            value={
+              formDataRequired.date
+                ? moment(formDataRequired.date).format('DD - MM - YYYY')
+                : strings.dateFormate
+            }
+            onChangeText={val => setFormDataRequired({...formDataRequired, date: val})}
+            labelTxt={strings.date}
+            placeholder={strings.select}
+            editable={false}
+            rightIcon={
+              <CalendarSvg
+                width={20}
+                height={20}
+                color={Colors.textLight}
+                styles={{marginRight: ms(14)}}
+              />
+            }
+            requiredField={true}
+            errorMessage={formErrors?.date}
+            validationStatus={formErrors?.date ? 'error' : 'default'}
+          />
+        </TouchableOpacity>
+        {showDatePicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode="date"
+            display={Platform.OS === 'ios' ? 'inline' : 'default'}
+            onChange={(_, selectedDate: any) => {
+              if (selectedDate)
+                setFormDataRequired({
+                  ...formDataRequired,
+                  date: selectedDate,
+                });
+              setShowDatePicker(false);
+            }}
+          />
+        )}
+
         <View style={styles.activeBtnView}>
-          <Text style={styles.titleText}>{strings.lastStep}?</Text>
+          <Text style={styles.titleText}>{strings.halfDay}?</Text>
           <Switch
-            value={formData.last_step}
-            onValueChange={val => setFormData({...formData, last_step: val})}
+            value={formData.half_day}
+            onValueChange={val => setFormData({...formData, half_day: val})}
             trackColor={{
               true: hexToRGBA(Colors.NorthTexasGreen, 0.4),
               false: hexToRGBA(Colors.gray, 0.4),
             }}
             thumbColor={
-              formData.last_step ? Colors.NorthTexasGreen : Colors.gray
+              formData.half_day ? Colors.NorthTexasGreen : Colors.gray
             }
           />
         </View>
 
-        <View style={styles.activeBtnView}>
-          <Text style={styles.titleText}>{strings.active}?</Text>
-          <Switch
-            value={formData.active}
-            onValueChange={val => setFormData({...formData, active: val})}
-            trackColor={{
-              true: hexToRGBA(Colors.NorthTexasGreen, 0.4),
-              false: hexToRGBA(Colors.gray, 0.4),
-            }}
-            thumbColor={formData.active ? Colors.NorthTexasGreen : Colors.gray}
-          />
-        </View>
-
         <InputField
-          value={formData.description}
-          onChangeText={val => setFormData({...formData, description: val})}
-          labelTxt={strings.description}
-          placeholder={strings.writeDescription}
+          value={formDataRequired.description}
+          onChangeText={val => setFormDataRequired({...formDataRequired, description: val})}
+          labelTxt={strings.details}
+          placeholder={strings.writeDetails}
           multiline={true}
           textAlignVertical={'top'}
+          requiredField={true}
+          errorMessage={formErrors?.description}
+          validationStatus={formErrors?.description ? 'error' : 'default'}
         />
       </ScrollView>
       <ButtonView
@@ -295,8 +311,8 @@ export default function AddWork({navigation, route}: any) {
           marginHorizontal: ms(20),
           marginBottom: ms(20),
         }}
-        isLoading={AddWorkLoading || EditWorkLoading}
-        disable={AddWorkLoading || EditWorkLoading}
+        isLoading={AddLeavesLoading || EditLeavesLoading}
+        disable={AddLeavesLoading || EditLeavesLoading}
       />
     </SafeAreaWrapper>
   );

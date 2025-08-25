@@ -26,7 +26,14 @@ export const urlEndPoint = {
   reports: 'reports',
   stocks: 'stocks',
 
-
   employee: 'employees',
 
+  employeeProfile: 'profile',
+  employeeHeads: 'employee-heads',
+  employeeDesignations: 'employee-designations',
+  employeeDepartments: 'employee-departments',
+  employeeEducations: 'employee-educations',
+  employeeExperiences: 'employee-experiences',
+
+  leaveTypes:'hr/leave-types'
 };

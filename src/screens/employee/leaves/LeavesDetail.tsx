@@ -4,35 +4,23 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  Pressable,
 } from 'react-native';
-import ActionBar from '../../components/ActionBar';
+import ActionBar from '../../../components/ActionBar';
 import {
-  ActiveDeActiveSvg,
   BackSvg,
-  CalendarSvg,
   CheckBoxSvg,
-  CodeSvg,
   DateSvg,
-  DetailTitleSvg,
-  ShareSvg,
-  StatusDetailSvg,
-} from '../../assets/Images/svg';
-import {goBack, navigate} from '../../navigators/RootNavigation';
-import {Colors} from '../../theme/variables';
-import {ms, vs} from '../../theme/spacing';
-import {typography} from '../../theme/typography';
-import SafeAreaWrapper from '../../components/SafeAreaWrapper';
-import {strings} from '../../localization';
-import {CustomerRoleSvg} from '../../assets/Images/svg/CustomerRoleSvg';
-import {CommonProps} from '../types';
-import {ACTIVE_OPACITY} from '../../constants/constants';
-import FastImageView from '../../components/FastImageView';
-import {NAVIGATION} from '../../constants/navigation';
-import {WorkItemSvg} from '../../assets/Images/svg/WorkItemSvg';
+} from '../../../assets/Images/svg';
+import {goBack} from '../../../navigators/RootNavigation';
+import {Colors} from '../../../theme/variables';
+import {ms, vs} from '../../../theme/spacing';
+import {typography} from '../../../theme/typography';
+import SafeAreaWrapper from '../../../components/SafeAreaWrapper';
+import {strings} from '../../../localization';
+import {CommonProps} from '../../types';
+import {WorkItemSvg} from '../../../assets/Images/svg/WorkItemSvg';
 
-export default function WorkDetail({route, navigation}: CommonProps) {
+export default function LeavesDetail({route, navigation}: CommonProps) {
   const detail = route?.params?.workData;
   // Example data, replace with actual props or navigation params
 

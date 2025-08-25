@@ -1,19 +1,18 @@
 import React, {useRef, useState} from 'react';
 import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
-import {Colors} from '../../theme/variables';
-import {ms} from '../../theme/spacing';
-import {typography} from '../../theme/typography';
-import {MoreSvg} from '../../assets/Images/svg/MoreSvg';
-import MenuPopup, {MenuItem} from '../../components/MenuPopup';
-import {EyeSvg} from '../../assets/Images/svg/EyeSvg';
-import {EditSvg} from '../../assets/Images/svg/EditSvg';
-import {CheckBoxSvg, DeleteSvg} from '../../assets/Images/svg';
-import {strings} from '../../localization';
-import {WorkItemSvg} from '../../assets/Images/svg/WorkItemSvg';
-import {TimeSvg} from '../../assets/Images/svg/TimeSvg';
-import {NavigationProp} from '@react-navigation/native';
-import {navigate} from '../../navigators/RootNavigation';
-import {NAVIGATION} from '../../constants/navigation';
+import {Colors} from '../../../theme/variables';
+import {ms} from '../../../theme/spacing';
+import {typography} from '../../../theme/typography';
+import {MoreSvg} from '../../../assets/Images/svg/MoreSvg';
+import MenuPopup, {MenuItem} from '../../../components/MenuPopup';
+import {EyeSvg} from '../../../assets/Images/svg/EyeSvg';
+import {EditSvg} from '../../../assets/Images/svg/EditSvg';
+import {CheckBoxSvg, DeleteSvg} from '../../../assets/Images/svg';
+import {strings} from '../../../localization';
+import {WorkItemSvg} from '../../../assets/Images/svg/WorkItemSvg';
+import {TimeSvg} from '../../../assets/Images/svg/TimeSvg';
+import {navigate} from '../../../navigators/RootNavigation';
+import {NAVIGATION} from '../../../constants/navigation';
 
 interface ProductsProps {
   item: any;
@@ -21,7 +20,7 @@ interface ProductsProps {
   deleteModal?: () => void;
 }
 
-const WorksItem = ({item, onPress, deleteModal}: ProductsProps) => {
+const LeavesItem = ({item, onPress, deleteModal}: ProductsProps) => {
   const moreRef = useRef(null);
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -30,14 +29,14 @@ const WorksItem = ({item, onPress, deleteModal}: ProductsProps) => {
       label: strings.view,
       icon: <EyeSvg width={20} height={20} color={Colors.textCl} />,
       onPress: () => {
-        navigate(NAVIGATION.WorksDetail, {workData: item});
+        navigate(NAVIGATION.LeavesDetail, {workData: item});
       },
     },
     {
       label: strings.edit,
       icon: <EditSvg width={20} height={20} color={Colors.textCl} />,
       onPress: () => {
-        navigate(NAVIGATION.AddWorks, {workData: item});
+        navigate(NAVIGATION.AddLeaves, {workData: item});
       },
     },
     {
@@ -199,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WorksItem;
+export default LeavesItem;
