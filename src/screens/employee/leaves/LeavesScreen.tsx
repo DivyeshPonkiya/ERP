@@ -6,41 +6,37 @@ import {
   RefreshControl,
   ActivityIndicator,
   Text,
-  Switch,
 } from 'react-native';
-import ActionBar from '../../components/ActionBar';
-import {BackSvg, DropDownSvg} from '../../assets/Images/svg';
-import {goBack, navigate} from '../../navigators/RootNavigation';
-import {Colors} from '../../theme/variables';
-import SafeAreaWrapper from '../../components/SafeAreaWrapper';
-import {ms} from '../../theme/spacing';
-import SearchHeader from '../../components/SearchHeader';
-import {strings} from '../../localization';
-import {NAVIGATION} from '../../constants/navigation';
-import EmptyState from '../../components/EmptyState';
-import ReusableModal from '../../components/ReusableModal';
-import InputField from '../../components/InputField';
+import ActionBar from '../../../components/ActionBar';
+import {BackSvg, DropDownSvg} from '../../../assets/Images/svg';
+import {goBack, navigate} from '../../../navigators/RootNavigation';
+import {Colors} from '../../../theme/variables';
+import SafeAreaWrapper from '../../../components/SafeAreaWrapper';
+import {ms} from '../../../theme/spacing';
+import SearchHeader from '../../../components/SearchHeader';
+import {strings} from '../../../localization';
+import {NAVIGATION} from '../../../constants/navigation';
+import EmptyState from '../../../components/EmptyState';
+import ReusableModal from '../../../components/ReusableModal';
+import InputField from '../../../components/InputField';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchProduct} from '../../createAsyncThunk/productsThunk';
-import {urlEndPoint} from '../../constants/urlEndPoint';
-import {RootState} from '../../store/store';
-import ReusableFilterModal from '../../components/ReusableFilterModal';
+import {urlEndPoint} from '../../../constants/urlEndPoint';
+import {RootState} from '../../../store/store';
+import ReusableFilterModal from '../../../components/ReusableFilterModal';
 import {
   CFL,
-  hexToRGBA,
   isNull,
   keyValueEmptyFilter,
   toastConst,
-} from '../../constants/constants';
-import {typography} from '../../theme/typography';
-import SelectDropdown from '../../components/SelectDropdown/SelectDropdown';
-import WorksItem from './WorksItem';
+} from '../../../constants/constants';
+import {typography} from '../../../theme/typography';
+import SelectDropdown from '../../../components/SelectDropdown/SelectDropdown';
+import WorksItem from './LeavesItem';
 
-import {AppDispatch} from '../../store/store';
-import {fetchWork, fetchWorkDelete} from '../../createAsyncThunk/employeeThunk';
-import {FontStyle} from '../../theme';
-import {setDeleteWorkData} from '../../createSlice/employeeSlice';
-import ToastMessage from '../../components/ToastMessage';
+import {AppDispatch} from '../../../store/store';
+import {fetchLeaves, fetchLeavesDelete} from '../../../createAsyncThunk/leavesThunk';
+import {setDeleteLeavesData} from '../../../createSlice/leavesSlice';
+import ToastMessage from '../../../components/ToastMessage';
 import _ from 'lodash';
 
 const WorksScreen = () => {
@@ -57,21 +53,21 @@ const WorksScreen = () => {
   ];
 
   const [
-    WorkListData,
-    WorkListLoading,
+    LeavesListData,
+    LeavesListLoading,
 
-    DeleteWorkData,
-    DeleteWorkLoading,
+    DeleteLeavesData,
+    DeleteLeavesLoading,
     error,
   ] = useSelector((state: RootState) => [
     
-    state.worksSlice.WorkListData,
-    state.worksSlice.WorkListLoading,
+    state.leavesSlice.LeavesListData,
+    state.leavesSlice.LeavesListLoading,
 
-    state.worksSlice.DeleteWorkData,
-    state.worksSlice.DeleteWorkLoading,
+    state.leavesSlice.DeleteLeavesData,
+    state.leavesSlice.DeleteLeavesLoading,
 
-    state.worksSlice.error,
+    state.leavesSlice.error,
   ]);
 
   const [visible, setVisible] = useState(false);
@@ -92,12 +88,12 @@ const WorksScreen = () => {
 
   useEffect(() => {
     dispatch(
-      fetchWork({
+      fetchLeaves({
         params: '',
         endPoint: urlEndPoint.works,
       }),
     );
-  }, []);
+  });
 
   useEffect(() => {
     if (error == 501) {
@@ -109,12 +105,12 @@ const WorksScreen = () => {
   }, [error]);
 
   useEffect(() => {
-    if (!isNull(WorkListData)) {
-      const workList = WorkListData?.works || [];
+    if (!isNull(LeavesListData)) {
+      const workList = LeavesListData?.works || [];
       setWorksList((prev: any = []) => {
-        if (WorkListData?.pagy?.current_page === 1) {
+        if (LeavesListData?.pagy?.current_page === 1) {
           return workList;
-        } else if (WorkListData?.pagy?.current_page > 1) {
+        } else if (LeavesListData?.pagy?.current_page > 1) {
           return [...prev, ...workList];
         } else {
           return workList ?? [];
@@ -124,12 +120,12 @@ const WorksScreen = () => {
       setRefreshing(false);
       setApplyFilter(false);
     }
-  }, [WorkListData]);
+  }, [LeavesListData]);
 
   useEffect(() => {
-    if (DeleteWorkData) {
-      ToastMessage.set(toastConst.successToast, DeleteWorkData?.message);
-      dispatch(setDeleteWorkData(null));
+    if (DeleteLeavesData) {
+      ToastMessage.set(toastConst.successToast, DeleteLeavesData?.message);
+      dispatch(setDeleteLeavesData(null));
 
       setDeleteModal(false);
       setSelectedItem(null);
@@ -137,7 +133,7 @@ const WorksScreen = () => {
         worksList?.filter((item: any) => item.id !== selectedItem?.id) || [];
       setWorksList(updatedList);
     }
-  }, [DeleteWorkData]);
+  }, [DeleteLeavesData]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -149,7 +145,7 @@ const WorksScreen = () => {
       const params = keyValueEmptyFilter(rawParams);
       if (!isNull(searchFiled)) {
         dispatch(
-          fetchWork({
+          fetchLeaves({
             params: params,
             endPoint: urlEndPoint.works,
           }),
@@ -171,7 +167,7 @@ const WorksScreen = () => {
       const params = keyValueEmptyFilter(rawParams);
 
       dispatch(
-        fetchWork({
+        fetchLeaves({
           params: params,
           endPoint: urlEndPoint.works,
         }),
@@ -183,7 +179,7 @@ const WorksScreen = () => {
     if (isFooterLoading) {
       return;
     }
-    const workListPage = WorkListData?.pagy || {};
+    const workListPage = LeavesListData?.pagy || {};
     if (workListPage?.total_pages > workListPage?.current_page) {
       const rawParams = {
         page: workListPage?.current_page + 1,
@@ -195,7 +191,7 @@ const WorksScreen = () => {
       const params = keyValueEmptyFilter(rawParams);
 
       dispatch(
-        fetchWork({
+        fetchLeaves({
           params: params,
           endPoint: urlEndPoint.works,
         }),
@@ -213,7 +209,7 @@ const WorksScreen = () => {
     setVisible(false);
     setApplyFilter(false);
     dispatch(
-      fetchWork({
+      fetchLeaves({
         endPoint: urlEndPoint.works,
       }),
     );
@@ -227,7 +223,7 @@ const WorksScreen = () => {
       activeType: {name: strings.all, id: ''},
     });
     dispatch(
-      fetchWork({
+      fetchLeaves({
         endPoint: urlEndPoint.works,
       }),
     );
@@ -235,7 +231,7 @@ const WorksScreen = () => {
 
   const onDeleteCall = () => {
     dispatch(
-      fetchWorkDelete({
+      fetchLeavesDelete({
         endPoint: urlEndPoint.works + `/${selectedItem?.id}`,
       }),
     );
@@ -449,7 +445,7 @@ const WorksScreen = () => {
         cancelLabel={strings.cancel}
         submitLabel={strings.delete}
         submitBgColor={Colors.colorRedD4}
-        isLoading={DeleteWorkLoading}
+        isLoading={DeleteLeavesLoading}
         title={strings.delete}
         description={strings.deleteConf}
         onClose={() => setDeleteModal(false)}
@@ -467,7 +463,7 @@ const WorksScreen = () => {
           clearFilter();
         }}
         period={period}
-        isLoading={WorkListLoading}
+        isLoading={LeavesListLoading}
         onPeriodChange={setPeriod}>
         {filterContent()}
       </ReusableFilterModal>

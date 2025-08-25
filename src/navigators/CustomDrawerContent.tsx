@@ -40,7 +40,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../store/store';
 import {setProfileData, setRevokeData} from '../createSlice/authSlice';
 import {strings} from '../localization';
-import {setEndUrl} from '../createSlice/reportSlice';
 import {fetchRevoke} from '../createAsyncThunk/authAsyncThunk';
 import {urlEndPoint} from '../constants/urlEndPoint';
 import {resetState} from '../createAsyncThunk/resetStateAsyncThunk';
@@ -180,6 +179,7 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
       ],
     },
       {label: strings.holidays, redirect: NAVIGATION.Profile},
+      {label: strings.leaves, redirect: NAVIGATION.Profile},
       {label: strings.logout, redirect: 'power'},
 
     ];
@@ -293,7 +293,8 @@ const CustomDrawer = ({route, navigation}: CommonProps) => {
               onChangeText={() =>
                 setSelectModule({name: '', id: '', icon: <></>})
               }
-              labelTxt={null}
+              labelTxt={strings.modules}
+              
               placeholder={strings.productionPlaceholder}
               editable={false}
               inputStyle={{...typography._18SofticesMedium}}

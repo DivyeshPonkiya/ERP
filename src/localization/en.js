@@ -246,5 +246,7 @@ export const en = {
   start_date: 'Start date',
   revoke_date: 'Revoke date',
   holidays: 'Holidays',
+  leaves: 'Leaves',
+
   na: 'NA',
 };

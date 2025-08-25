@@ -2,38 +2,38 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, ScrollView, View, Text, Switch} from 'react-native';
 
-import ActionBar from '../../components/ActionBar';
-import {BackSvg, DropDownSvg} from '../../assets/Images/svg';
-import {ms} from '../../theme/spacing';
-import {typography} from '../../theme/typography';
-import {Colors} from '../../theme/variables';
-import InputField from '../../components/InputField';
-import {strings} from '../../localization';
+import ActionBar from '../../../components/ActionBar';
+import {BackSvg, DropDownSvg} from '../../../assets/Images/svg';
+import {ms} from '../../../theme/spacing';
+import {typography} from '../../../theme/typography';
+import {Colors} from '../../../theme/variables';
+import InputField from '../../../components/InputField';
+import {strings} from '../../../localization';
 import {
   CFL,
   hexToRGBA,
   isNull,
   toastConst,
   validateForm,
-} from '../../constants/constants';
-import ButtonView from '../../components/ButtonView';
-import SafeAreaWrapper from '../../components/SafeAreaWrapper';
-import {goBack} from '../../navigators/RootNavigation';
-import SelectDropdown from '../../components/SelectDropdown/SelectDropdown';
+} from '../../../constants/constants';
+import ButtonView from '../../../components/ButtonView';
+import SafeAreaWrapper from '../../../components/SafeAreaWrapper';
+import {goBack} from '../../../navigators/RootNavigation';
+import SelectDropdown from '../../../components/SelectDropdown/SelectDropdown';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
-import {urlEndPoint} from '../../constants/urlEndPoint';
-import ToastMessage from '../../components/ToastMessage';
+import {RootState} from '../../../store/store';
+import {urlEndPoint} from '../../../constants/urlEndPoint';
+import ToastMessage from '../../../components/ToastMessage';
 import {
   fetchWork,
   fetchWorkCreate,
   fetchWorkEdit,
-} from '../../createAsyncThunk/employeeThunk';
+} from '../../../createAsyncThunk/employeeThunk';
 
-import {AppDispatch} from '../../store/store';
-import {setAddWorkData, setEditWorkData} from '../../createSlice/employeeSlice';
+import {AppDispatch} from '../../../store/store';
+import {setAddWorkData, setEditWorkData} from '../../../createSlice/employeeSlice';
 import _ from 'lodash';
-import {ParamsProps} from '../types';
+import {ParamsProps} from '../../types';
 
 export default function AddWork({navigation, route}: any) {
   const dispatch = useDispatch<AppDispatch>();

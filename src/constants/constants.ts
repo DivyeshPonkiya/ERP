@@ -20,7 +20,7 @@ import {
   ACCESS_TOKEN_N,
 } from '@env';
 
-export const BaseUrl = BASE_URL_L;
+export const BaseUrl = BASE_URL_D;
 
 export const Client_Id = CLIENT_ID_L;
 export const Client_Secret = CLIENT_SECRET_L;

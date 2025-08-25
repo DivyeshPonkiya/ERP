@@ -128,8 +128,9 @@ const createShowThunk = (typePrefix: string) => {
 };
 
 // ✅ Reusable async thunks
-export const fetchStockCreate = createPostThunk('Stock');
-export const fetchStock = createGetThunk('StockList');
-export const fetchStockEdit = createPatchThunk('StockEdit');
-export const fetchStockDelete = createDeleteThunk('StockDelete');
-export const fetchStockShow = createShowThunk('StockShow');
+export const fetchLeavesCreate = createPostThunk('Leaves');
+export const fetchLeaves = createGetThunk('LeavesList');
+export const fetchLeavesEdit = createPatchThunk('LeavesEdit');
+export const fetchLeavesDelete = createDeleteThunk('LeavesDelete');
+export const fetchLeavesShow = createShowThunk('LeavesShow');
+export const fetchLeavesSearch = createGetThunk('LeavesSearch');

@@ -11,7 +11,6 @@ import {
 import {Colors} from '../theme/variables';
 import {typography} from '../theme/typography';
 import {hs, ms, vs} from '../theme/spacing';
-import {strings} from '../localization';
 import {CFL} from '../constants/constants';
 
 // Types for external use
